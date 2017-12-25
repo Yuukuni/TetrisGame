@@ -10,24 +10,24 @@
  ```
  git clone https://github.com/Yuukuni/TetrisGame.git
  ```
- * 建立自己的分支
- ```
- git branch ***
- ```
+ * 開eclipse寫code囉
 
 然後有做變更再更新
 
-### 每次撰寫code要做的事
-## 流程
+## 每次撰寫code要做的事
+
+ ### 版本一(使用SourceTree)
+
+ ### 版本二(使用command line)
 
  * 確認master的檔案為最新。原則上應該不會有人動你的分支所以自己的不用更新，其他人分支就看你要不要更新了
  ```
  git checkout master
  git pull
  ```
- * 切回自己的分支
+ * 切回***分支
  ```
- git checkout *** //***為自己的分支名稱
+ git checkout *** //***為分支名稱
  ```
  * 將master與自己分支merge
  ```
@@ -36,7 +36,7 @@
  * 開始打code
  * 有變更或新增的檔案打完後記得add、commit、push
  ```
- git push origin *** // ***為自己分支名稱
+ git push origin *** // ***為分支名稱
  ```
  * 確認可以用之後pull regust至master，這點是在github上使用
  ```
@@ -45,7 +45,7 @@
  git push
  ```
 
-### 簡易指令教學
+## 簡易指令教學
 
  * 新增檔案
  ```
@@ -109,3 +109,4 @@
 ### 簡報下載
  * [認識 Git 版本控制與 GitHub 協作平台](https://drive.google.com/file/d/1caR1ty-_kZa_WMDj_zSuuHKRredeBKeu/view?usp=sharing)
  * [作業一](https://drive.google.com/file/d/1K0BYNfRRoR_pIvOe3WNeIc40L8rtl6R8/view?usp=sharing) 從23頁開始
+[]()
