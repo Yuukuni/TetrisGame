@@ -9,33 +9,26 @@ public class TetrisWindow {
 	private JFrame window;
 	private TetrisBoard board;
 	
-	public int WINDOW_WIDTH, WINDOW_HEIGHT;
-	public int BOARD_WIDTH, BOARD_HEIGHT;
-	public int BOARD_X, BOARD_Y;
-	
 	public TetrisWindow(TetrisTexture currentTexture) {
 		
-		board = new TetrisBoard(currentTexture);
+		int boardWidth = TetrisBoard.WIDTH_BLOCKS * TetrisBoard.BLOCK_PIXEL;
+		int boardHeight = TetrisBoard.HEIGHT_BLOCKS * TetrisBoard.BLOCK_PIXEL;
 		
-		BOARD_WIDTH = board.WIDTH_BLOCKS * board.BLOCK_PIXEL;
-		BOARD_HEIGHT = board.HEIGHT_BLOCKS * board.BLOCK_PIXEL;
-		BOARD_X = BOARD_WIDTH * 1;
-		BOARD_Y = 0;
+		int windowWidth = boardWidth * 3;
+		int windowHeight = boardHeight * 1;
 		
-		board.setBounds(BOARD_X, BOARD_Y, BOARD_WIDTH, BOARD_HEIGHT);
-		
+		int boardX = boardWidth * 1;
+		int boardY = 0;
+			
 		window = new JFrame("Tetris Game");
-		
-		WINDOW_WIDTH = BOARD_WIDTH * 3;
-		WINDOW_HEIGHT = BOARD_HEIGHT * 1;
-		
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		window.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+		window.setSize(windowWidth, windowHeight);
 		window.setResizable(false);
 		window.setLayout(null);
 		
+		board = new TetrisBoard(currentTexture);
+		board.setBounds(boardX, boardY, boardWidth, boardHeight);
 		window.add(board);
-		window.addKeyListener(board);
 		
 	}
 	

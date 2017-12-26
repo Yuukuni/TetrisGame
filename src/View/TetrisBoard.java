@@ -11,15 +11,15 @@ import javax.swing.JPanel;
 
 import View.Texture.*;
 
-public class TetrisBoard extends JPanel implements KeyListener {
+public class TetrisBoard extends JPanel { 
 	
 	private static final long serialVersionUID = 1L;
 	
 	private BufferedImage[] blocks;
 
-	public final int BLOCK_KINDS = 7;
-	public final int BLOCK_PIXEL = 30;						 
-	public final int WIDTH_BLOCKS = 12, HEIGHT_BLOCKS = 21;
+	public static final int BLOCK_KINDS = 7;
+	public static final int BLOCK_PIXEL = 30;						 
+	public static final int WIDTH_BLOCKS = 12, HEIGHT_BLOCKS = 21;
 	
 	public TetrisBoard(TetrisTexture currentTexture) {
 		
@@ -57,17 +57,11 @@ public class TetrisBoard extends JPanel implements KeyListener {
 		
 	}
 	
-	@Override
-	public void keyPressed(KeyEvent e) {
+
+	public String keyPressed(KeyEvent e) {
 		
 		//Here to code...
+		return null;
 		
 	}
-
-	@Override
-	public void keyReleased(KeyEvent e) {}
-
-	@Override
-	public void keyTyped(KeyEvent e) {}
-	
 }
