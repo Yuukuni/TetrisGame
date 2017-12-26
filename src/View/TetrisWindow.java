@@ -6,12 +6,17 @@ import View.Texture.*;
 
 public class TetrisWindow {
 	
-	public static final int WINDOW_WIDTH = 720, WINDOW_HEIGHT = 420;
-	public static final int BOARD_WIDTH = 240, BOARD_HEIGHT = 420;
-	public static final int BOARD_X = 240, BOARD_Y = 0;
-	
 	private JFrame window;
 	private TetrisBoard board;
+	
+	public final int BOARD_WIDTH = board.WIDTH_BLOCKS() * board.BLOCK_PIXEL();
+	public final int BOARD_HEIGHT = board.HEIGHT_BLOCKS() * board.BLOCK_PIXEL();
+	
+	public final int BOARD_X = BOARD_WIDTH * 1;
+	public final int BOARD_Y = 0;
+	
+	public final int WINDOW_WIDTH = BOARD_WIDTH * 3;
+	public final int WINDOW_HEIGHT = BOARD_HEIGHT * 1;
 	
 	public TetrisWindow(TetrisTexture currentTexture) {
 		
@@ -32,6 +37,12 @@ public class TetrisWindow {
 	public void setVisible(boolean b) {
 		
 		window.setVisible(b);
+		
+	}
+	
+	public void repaintTetrisBoard() {
+		
+		board.repaint();
 		
 	}
 	

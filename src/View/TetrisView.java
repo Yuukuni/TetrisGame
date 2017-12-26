@@ -19,16 +19,23 @@ public class TetrisView {
 	}
 	
 	private void textureSetting(TextureName texture) {
-		
-		tetrisTextures = new TetrisTexture[5];
 
+		tetrisTextures = new TetrisTexture[5];
+		
 		tetrisTextures[3] = new TetrisTexture_B10415007();
 		//tetrisTextures[0] = new TetrisTexture_B10401020();
 		//tetrisTextures[1] = new TetrisTexture_B10401023();
 		//tetrisTextures[2] = new TetrisTexture_B10404011();
 		//tetrisTextures[4] = new TetrisTexture_F10615001();
 		
-		currentTexture = tetrisTextures[texture.ordinal()];
+		int current = texture.ordinal();
+		currentTexture = tetrisTextures[current];
+		
+	}
+	
+	public void repaintTetrisBoard() {
+		
+		tetrisWindow.repaintTetrisBoard();
 		
 	}
 	
