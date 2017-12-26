@@ -1,15 +1,25 @@
 ﻿# TetrisGame
 這是期末專案，大家記得做以下事情，只需要做一次
- * 先設定你的基本資料(之後commit的時候才容易知道作者是誰)
+ * 下載[Git](https://git-scm.com/)，這樣才能下指令
+ 
+ * 從任意地方開CMD，並用以下指令設定你的基本資料(之後commit的時候才容易知道作者是誰)
  ```
- git config --global user.name "yuu"
- git config --global user.email "a29104705@gmail.com"
+ git config --global user.name "你的名字(英文)"
+ git config --global user.email "你的信箱"
  ```
-
- * 把專案clone下來
+ * 建立Github帳號，把ID告訴祐邦，才能加為共編者
+ * 去信箱找共編要求的信並按同意
+ ---------------這邊以下不會的話直接找祐邦唷-------------------------
+ * 安裝[SourceTree](https://www.sourcetreeapp.com/)並綁定Github帳號
+ * 開SourceTree，左上角有個「+」點了之後選Clone，把這個網址貼進第一個框框，第二個框框選擇你要放這個資料夾到哪個路徑，如下
  ```
- git clone https://github.com/Yuukuni/TetrisGame.git
+ https://github.com/Yuukuni/TetrisGame.git //第一個框框
+ C:\Users\user\Desktop\TetrisGame //第二個框框
  ```
+ * 這時右上角有個Gitflow的選項，點一下按OK就可以了
+ 
+ * 新增自己負責的分支，一樣點Gitflow按鈕，選start new feature
+ * 切到該分支
  * 開eclipse寫code囉
 
 然後有做變更再更新
