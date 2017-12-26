@@ -4,12 +4,12 @@ import View.Texture.*;
 
 public class TetrisView {
 	
-	private TetrisTexture[] tetrisTextures;
-	TetrisTexture currentTexture;
-	enum TextureName { B10401020, B10401023, B10404011, B10415007, F10615001 };
-	
 	private TetrisWindow tetrisWindow;
 	
+	private TetrisTexture[] tetrisTextures;
+	private TetrisTexture currentTexture;
+	private enum TextureName { B10401020, B10401023, B10404011, B10415007, F10615001 };
+
 	public TetrisView() {
 		
 		textureSetting(TextureName.B10415007);

@@ -14,17 +14,12 @@ import View.Texture.*;
 public class TetrisBoard extends JPanel implements KeyListener {
 	
 	private static final long serialVersionUID = 1L;
-	public final int BLOCK_KINDS = 7;
-	public final int BLOCK_PIXEL = 20;						 
-	public final int WIDTH_BLOCKS = 12, HEIGHT_BLOCKS = 21;
 	
 	private BufferedImage[] blocks;
-	
-	public final int BLOCK_KINDS() { return BLOCK_KINDS; }
-	public final int BLOCK_PIXEL() { return BLOCK_PIXEL; }
-	public final int WIDTH_BLOCKS() { return WIDTH_BLOCKS; }
-	public final int HEIGHT_BLOCKS() { return HEIGHT_BLOCKS; }
-	
+
+	public final int BLOCK_KINDS = 7;
+	public final int BLOCK_PIXEL = 30;						 
+	public final int WIDTH_BLOCKS = 12, HEIGHT_BLOCKS = 21;
 	
 	public TetrisBoard(TetrisTexture currentTexture) {
 		
@@ -57,6 +52,8 @@ public class TetrisBoard extends JPanel implements KeyListener {
 		super.paintComponent(g);
 
 		//Here to code...
+		int i = 3;
+		g.drawImage(blocks[i], 0, 0, null);
 		
 	}
 	
