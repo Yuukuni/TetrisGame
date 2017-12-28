@@ -2759,65 +2759,7 @@
 											"height": 13,
 											"autoResize": false,
 											"underline": false,
-											"text": "+keyPressed(e: KeyEvent): void",
-											"horizontalAlignment": 0,
-											"verticalAlignment": 5,
-											"wordWrap": false
-										},
-										{
-											"_type": "UMLOperationView",
-											"_id": "AAAAAAFgku+Sl6dEQys=",
-											"_parent": {
-												"$ref": "AAAAAAFgkumCqKJGfMY="
-											},
-											"model": {
-												"$ref": "AAAAAAFgku+Sf6c7g4c="
-											},
-											"visible": true,
-											"enabled": true,
-											"lineColor": "#000000",
-											"fillColor": "#ffffff",
-											"fontColor": "#000000",
-											"font": "Arial;13;0",
-											"showShadow": true,
-											"containerChangeable": false,
-											"containerExtending": false,
-											"left": 709,
-											"top": 882,
-											"width": 292.9697265625,
-											"height": 13,
-											"autoResize": false,
-											"underline": false,
-											"text": "+keyReleased(e: KeyEvent): void",
-											"horizontalAlignment": 0,
-											"verticalAlignment": 5,
-											"wordWrap": false
-										},
-										{
-											"_type": "UMLOperationView",
-											"_id": "AAAAAAFgku9SpKcDioU=",
-											"_parent": {
-												"$ref": "AAAAAAFgkumCqKJGfMY="
-											},
-											"model": {
-												"$ref": "AAAAAAFgku9ShKb6XPY="
-											},
-											"visible": true,
-											"enabled": true,
-											"lineColor": "#000000",
-											"fillColor": "#ffffff",
-											"fontColor": "#000000",
-											"font": "Arial;13;0",
-											"showShadow": true,
-											"containerChangeable": false,
-											"containerExtending": false,
-											"left": 709,
-											"top": 897,
-											"width": 292.9697265625,
-											"height": 13,
-											"autoResize": false,
-											"underline": false,
-											"text": "+keyTyped(e: KeyEvent): void",
+											"text": "+keyPressed(e: KeyEvent): String",
 											"horizontalAlignment": 0,
 											"verticalAlignment": 5,
 											"wordWrap": false
@@ -2841,7 +2783,7 @@
 											"containerChangeable": false,
 											"containerExtending": false,
 											"left": 709,
-											"top": 912,
+											"top": 882,
 											"width": 292.9697265625,
 											"height": 13,
 											"autoResize": false,
@@ -2870,7 +2812,7 @@
 											"containerChangeable": false,
 											"containerExtending": false,
 											"left": 709,
-											"top": 927,
+											"top": 897,
 											"width": 292.9697265625,
 											"height": 13,
 											"autoResize": false,
@@ -2893,7 +2835,7 @@
 									"left": 704,
 									"top": 832,
 									"width": 302.9697265625,
-									"height": 113,
+									"height": 83,
 									"autoResize": false
 								},
 								{
@@ -5895,101 +5837,7 @@
 									"visibility": "public",
 									"isStatic": false,
 									"isLeaf": false,
-									"type": "void",
-									"isReadOnly": false,
-									"isOrdered": false,
-									"isUnique": false,
-									"direction": "return"
-								}
-							],
-							"concurrency": "sequential",
-							"isQuery": false,
-							"isAbstract": false
-						},
-						{
-							"_type": "UMLOperation",
-							"_id": "AAAAAAFgku+Sf6c7g4c=",
-							"_parent": {
-								"$ref": "AAAAAAFgkumCp6I9uZw="
-							},
-							"name": "keyReleased",
-							"visibility": "public",
-							"isStatic": false,
-							"isLeaf": false,
-							"parameters": [
-								{
-									"_type": "UMLParameter",
-									"_id": "AAAAAAFgku/AsKda2tU=",
-									"_parent": {
-										"$ref": "AAAAAAFgku+Sf6c7g4c="
-									},
-									"name": "e",
-									"visibility": "public",
-									"isStatic": false,
-									"isLeaf": false,
-									"type": "KeyEvent",
-									"isReadOnly": false,
-									"isOrdered": false,
-									"isUnique": false,
-									"direction": "in"
-								},
-								{
-									"_type": "UMLParameter",
-									"_id": "AAAAAAFgku/AsadbAig=",
-									"_parent": {
-										"$ref": "AAAAAAFgku+Sf6c7g4c="
-									},
-									"visibility": "public",
-									"isStatic": false,
-									"isLeaf": false,
-									"type": "void",
-									"isReadOnly": false,
-									"isOrdered": false,
-									"isUnique": false,
-									"direction": "return"
-								}
-							],
-							"concurrency": "sequential",
-							"isQuery": false,
-							"isAbstract": false
-						},
-						{
-							"_type": "UMLOperation",
-							"_id": "AAAAAAFgku9ShKb6XPY=",
-							"_parent": {
-								"$ref": "AAAAAAFgkumCp6I9uZw="
-							},
-							"name": "keyTyped",
-							"visibility": "public",
-							"isStatic": false,
-							"isLeaf": false,
-							"parameters": [
-								{
-									"_type": "UMLParameter",
-									"_id": "AAAAAAFgku+RqacZo7k=",
-									"_parent": {
-										"$ref": "AAAAAAFgku9ShKb6XPY="
-									},
-									"name": "e",
-									"visibility": "public",
-									"isStatic": false,
-									"isLeaf": false,
-									"type": "KeyEvent",
-									"isReadOnly": false,
-									"isOrdered": false,
-									"isUnique": false,
-									"direction": "in"
-								},
-								{
-									"_type": "UMLParameter",
-									"_id": "AAAAAAFgku+RqacaZis=",
-									"_parent": {
-										"$ref": "AAAAAAFgku9ShKb6XPY="
-									},
-									"visibility": "public",
-									"isStatic": false,
-									"isLeaf": false,
-									"type": "void",
+									"type": "String",
 									"isReadOnly": false,
 									"isOrdered": false,
 									"isUnique": false,
