@@ -54,31 +54,10 @@ public class TetrisView {
 		
 	}
 	
-	//Just for testing.
-	public static void main(String[] args) {		
-		try {
-			TetrisView view = new TetrisView();
-			int[][] board = new int[12][21];
-			
-			for(int i = 0; i < TetrisBoard.WIDTH_BLOCKS; i++){
-				for(int j = 0; j < TetrisBoard.HEIGHT_BLOCKS; j++){
-					if(i == 0 || i == 11 || j == 20){
-						board[i][j] = 7;
-					}
-					else{
-						board[i][j] = 8;
-					}
-				}
-			}
-			
-			board[4][10] = 5;
-			board[4][9] = 5;
-			board[4][8] = 5;
-			board[3][8] = 5;	
-			view.repaintTetrisBoard(board);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	public void setStopButtonsVisible(boolean b) {
+		
+		tetrisWindow.setStopButtonsVisible(b);
+		
 	}
-	
+
 }
