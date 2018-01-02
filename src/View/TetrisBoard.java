@@ -3,13 +3,10 @@ package View;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
-import javax.management.modelmbean.ModelMBean;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
@@ -116,11 +113,10 @@ public class TetrisBoard extends JPanel {
 		
 	}
 	
-	public TetrisBoard(TetrisTexture currentTexture) {
+	public TetrisBoard(TetrisTexture currentTexture, Point currentBlockPosition, int currentBlockKind, int currentBlockRotation) {
 		
 		textureSetting(currentTexture);
-		initBoard();
-		initButtons();
+		init(currentBlockPosition, currentBlockKind, currentBlockRotation);
 		
 	}
 	
@@ -144,7 +140,11 @@ public class TetrisBoard extends JPanel {
 		
 	}
 	
-	private void initBoard() {
+	private void init(Point currentBlockPosition, int currentBlockKind, int currentBlockRotation) {
+		
+		this.currentBlockPosition = new Point(currentBlockPosition.x, currentBlockPosition.y);
+		this.currentBlockKind = currentBlockKind;
+		this.currentBlockRotation = currentBlockRotation;
 		
 		board = new int[WIDTH_BLOCKS][HEIGHT_BLOCKS];
 		for(int i = 0; i < WIDTH_BLOCKS; i++) {
@@ -157,6 +157,8 @@ public class TetrisBoard extends JPanel {
 				}
 			}
 		}
+		
+		initButtons();
 		
 	}
 	
@@ -197,7 +199,7 @@ public class TetrisBoard extends JPanel {
 	public void paintComponent(Graphics g) {
 		
 		super.paintComponent(g);
-			  
+		
 		for(int i = 0; i < WIDTH_BLOCKS; i++){
 			for(int j = 0; j < HEIGHT_BLOCKS; j++){
 				int currentBlock = board[i][j];
@@ -207,7 +209,7 @@ public class TetrisBoard extends JPanel {
 		
 		for(Point p : TetrisBlocks[currentBlockKind][currentBlockRotation]) {
 			
-			g.drawImage(blocks[currentBlockKind], currentBlockPosition.x + p.x, currentBlockPosition.y + p.y, null);
+			g.drawImage(blocks[currentBlockKind], (currentBlockPosition.x + p.x) * BLOCK_PIXEL, (currentBlockPosition.y + p.y) * BLOCK_PIXEL, null);
 			
 		}
 		

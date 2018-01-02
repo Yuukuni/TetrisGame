@@ -21,7 +21,8 @@ public class TetrisGame {
 	public static final int WIDTH_BLOCKS = 12;
 	public static final int HEIGHT_BLOCKS = 21;
 	
-	private static final Point START_POSITION = new Point(4, 0);
+	private static final int START_POSITION_X = 5;
+	private static final int START_POSITION_Y = 0;
 	private static final int START_ROTATION = 0;
 	
 	private static final Point[][][] TetrisBlocks = {
@@ -156,17 +157,6 @@ public class TetrisGame {
 	public TetrisGame() {
 		
 		initGame();
-		new Thread() {
-			@Override 
-			public void run() {
-				while (true) {
-					try {
-						Thread.sleep(1000);
-						drop();
-					} catch ( InterruptedException e ) {}
-				}
-			}
-		}.start();
 		
 	}
 	
@@ -193,7 +183,7 @@ public class TetrisGame {
 	
 	private void newBlock() {
 		
-		currentBlockPosition = START_POSITION;
+		currentBlockPosition = new Point(START_POSITION_X, START_POSITION_Y);
 		currentBlockKind = currentBlocks.get(0);
 		currentBlockRotation = START_ROTATION;
 		
@@ -206,7 +196,9 @@ public class TetrisGame {
 		
 		for(int i = 0; i < 6; ++i) {
 			currentBlocks.set(i, currentBlocks.get(i+1));
-			nextBlocks.set(i, nextBlocks.get(i+1));
+			if(i < (nextBlocks.size() - 1)) {
+				nextBlocks.set(i, nextBlocks.get(i+1));
+			}
 		}
 		currentBlocks.set(6, nextFirstBlock);
 		nextBlocks.remove(nextBlocks.size() - 1);
@@ -265,7 +257,7 @@ public class TetrisGame {
 		
 		boolean needClear;
 		int clearLines = 0;
-		for (int j = HEIGHT_BLOCKS; j > 0; --j) {
+		for (int j = HEIGHT_BLOCKS - 2; j > 0; j--) {
 			needClear = true;
 			for (int i = 1; i < (WIDTH_BLOCKS - 1); i++) {
 				if (board[i][j] == Blocks.None) {
@@ -298,13 +290,13 @@ public class TetrisGame {
 		
 	private void deleteRow(int row) {
 	
-		for(int i = 1; i < (WIDTH_BLOCKS - 1); ++i)
-			board[1][i] = Blocks.None;
-		for (int j = row; j > 1; j--) {
+		for (int j = row; j > 0; j--) {
 			for (int i = 1; i < (WIDTH_BLOCKS - 1); ++i) {
 				board[i][j] = board[i][j - 1];
 			}
 		}
+		for(int i = 1; i < (WIDTH_BLOCKS - 1); ++i)
+			board[i][0] = Blocks.None;
 		
 	}
 	

@@ -13,11 +13,17 @@ public class TetrisView {
 	private TetrisTexture[] tetrisTextures;
 	private TetrisTexture currentTexture;
 	private enum TextureName { B10401020, B10401023, B10404011, B10415007, F10615001 };
+	
+	public TetrisWindow getTetrisWindow() {
+		
+		return tetrisWindow;
+		
+	}
 
-	public TetrisView() {
+	public TetrisView(Point currentBlockPosition, int currentBlockKind, int currentBlockRotation) {
 		
 		textureSetting(TextureName.B10415007);
-		tetrisWindow = new TetrisWindow(currentTexture);
+		tetrisWindow = new TetrisWindow(currentTexture, currentBlockPosition, currentBlockKind, currentBlockRotation);
 		tetrisWindow.setVisible(true);
 		
 	}

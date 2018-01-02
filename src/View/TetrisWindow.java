@@ -6,6 +6,7 @@ import java.awt.event.KeyListener;
 
 import javax.swing.JFrame;
 
+
 import View.Texture.*;
 
 public class TetrisWindow {
@@ -13,7 +14,13 @@ public class TetrisWindow {
 	private JFrame tetrisWindow;
 	private TetrisBoard tetrisBoard;
 	
-	public TetrisWindow(TetrisTexture currentTexture) {
+	public TetrisBoard getTetrisBoard() {
+		
+		return tetrisBoard;
+		
+	}
+	
+	public TetrisWindow(TetrisTexture currentTexture, Point currentBlockPosition, int currentBlockKind, int currentBlockRotation) {
 		
 		int boardWidth = TetrisBoard.WIDTH_BLOCKS * TetrisBoard.BLOCK_PIXEL + 1;
 		int boardHeight = TetrisBoard.HEIGHT_BLOCKS * TetrisBoard.BLOCK_PIXEL + 1;
@@ -31,7 +38,7 @@ public class TetrisWindow {
 		tetrisWindow.setResizable(false);
 		tetrisWindow.setLayout(null);
 		
-		tetrisBoard = new TetrisBoard(currentTexture);
+		tetrisBoard = new TetrisBoard(currentTexture, currentBlockPosition, currentBlockKind, currentBlockRotation);
 		tetrisBoard.setLayout(null);
 		tetrisBoard.setBounds(boardX, boardY, boardWidth, boardHeight);
 		tetrisWindow.add(tetrisBoard);
