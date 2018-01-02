@@ -1,5 +1,6 @@
 package View;
 
+import java.awt.Point;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyListener;
 
@@ -48,9 +49,9 @@ public class TetrisView {
 		
 	}
 	
-	public void repaintTetrisBoard(int[][] board) {	
+	public void repaintTetrisBoard(int[][] board, Point currentBlockPosition, int currentBlockKind, int currentBlockRotation) {	
 		
-		tetrisWindow.repaintTetrisBoard(board);
+		tetrisWindow.repaintTetrisBoard(board, currentBlockPosition, currentBlockKind, currentBlockRotation);
 		
 	}
 	

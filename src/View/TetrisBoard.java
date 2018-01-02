@@ -1,6 +1,7 @@
 package View;
 
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -19,7 +20,12 @@ public class TetrisBoard extends JPanel {
 	private static final long serialVersionUID = 1L;
 	
 	private BufferedImage[] blocks;
+	
 	private int[][] board;
+	private Point currentBlockPosition;
+	private int currentBlockKind;
+	private int currentBlockRotation;
+	
 	private JButton continueButton;
     private JButton restartButton;
     private JButton exitButton;
@@ -28,9 +34,85 @@ public class TetrisBoard extends JPanel {
 	public static final int BLOCK_PIXEL = 30;						 
 	public static final int WIDTH_BLOCKS = 12, HEIGHT_BLOCKS = 21;
 	
+	private static final Point[][][] TetrisBlocks = {
+			// I-Piece
+			{
+				{ new Point(0, 1), new Point(1, 1), new Point(2, 1), new Point(3, 1) },
+				{ new Point(1, 0), new Point(1, 1), new Point(1, 2), new Point(1, 3) },
+				{ new Point(0, 1), new Point(1, 1), new Point(2, 1), new Point(3, 1) },
+				{ new Point(1, 0), new Point(1, 1), new Point(1, 2), new Point(1, 3) }
+			},
+			
+			// J-Piece
+			{
+				{ new Point(0, 1), new Point(1, 1), new Point(2, 1), new Point(2, 0) },
+				{ new Point(1, 0), new Point(1, 1), new Point(1, 2), new Point(2, 2) },
+				{ new Point(0, 1), new Point(1, 1), new Point(2, 1), new Point(0, 2) },
+				{ new Point(1, 0), new Point(1, 1), new Point(1, 2), new Point(0, 0) }
+			},
+			
+			// L-Piece
+			{
+				{ new Point(0, 1), new Point(1, 1), new Point(2, 1), new Point(2, 2) },
+				{ new Point(1, 0), new Point(1, 1), new Point(1, 2), new Point(0, 2) },
+				{ new Point(0, 1), new Point(1, 1), new Point(2, 1), new Point(0, 0) },
+				{ new Point(1, 0), new Point(1, 1), new Point(1, 2), new Point(2, 0) }
+			},
+			
+			// O-Piece
+			{
+				{ new Point(0, 0), new Point(0, 1), new Point(1, 0), new Point(1, 1) },
+				{ new Point(0, 0), new Point(0, 1), new Point(1, 0), new Point(1, 1) },
+				{ new Point(0, 0), new Point(0, 1), new Point(1, 0), new Point(1, 1) },
+				{ new Point(0, 0), new Point(0, 1), new Point(1, 0), new Point(1, 1) }
+			},
+			
+			// S-Piece
+			{
+				{ new Point(1, 0), new Point(2, 0), new Point(0, 1), new Point(1, 1) },
+				{ new Point(0, 0), new Point(0, 1), new Point(1, 1), new Point(1, 2) },
+				{ new Point(1, 0), new Point(2, 0), new Point(0, 1), new Point(1, 1) },
+				{ new Point(0, 0), new Point(0, 1), new Point(1, 1), new Point(1, 2) }
+			},
+			
+			// T-Piece
+			{
+				{ new Point(1, 0), new Point(0, 1), new Point(1, 1), new Point(2, 1) },
+				{ new Point(1, 0), new Point(0, 1), new Point(1, 1), new Point(1, 2) },
+				{ new Point(0, 1), new Point(1, 1), new Point(2, 1), new Point(1, 2) },
+				{ new Point(1, 0), new Point(1, 1), new Point(2, 1), new Point(1, 2) }
+			},
+			
+			// Z-Piece
+			{
+				{ new Point(0, 0), new Point(1, 0), new Point(1, 1), new Point(2, 1) },
+				{ new Point(1, 0), new Point(0, 1), new Point(1, 1), new Point(0, 2) },
+				{ new Point(0, 0), new Point(1, 0), new Point(1, 1), new Point(2, 1) },
+				{ new Point(1, 0), new Point(0, 1), new Point(1, 1), new Point(0, 2) }
+			}
+	};
+	
 	public void setBoard(int[][] board) {
 		
 		this.board = board;
+		
+	}
+	
+	public void setCurrentBlockPosition(Point position) {
+		
+		this.currentBlockPosition = position;
+		
+	}
+	
+	public void setCurrentBlockKind(int kind) {
+		
+		this.currentBlockKind = kind;
+		
+	}
+	
+	public void setCurrentBlockRotation(int rotation) {
+		
+		this.currentBlockRotation = rotation;
 		
 	}
 	
@@ -121,6 +203,12 @@ public class TetrisBoard extends JPanel {
 				int currentBlock = board[i][j];
 			    g.drawImage(blocks[currentBlock], i * BLOCK_PIXEL, j * BLOCK_PIXEL, null);
 			}
+		}
+		
+		for(Point p : TetrisBlocks[currentBlockKind][currentBlockRotation]) {
+			
+			g.drawImage(blocks[currentBlockKind], currentBlockPosition.x + p.x, currentBlockPosition.y + p.y, null);
+			
 		}
 		
 		for(int i = 0; i < WIDTH_BLOCKS + 1; i++) {
