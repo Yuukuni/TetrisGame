@@ -1,9 +1,8 @@
 package View;
 
-import java.awt.Point;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyListener;
 
+import Model.TetrisBlock;
 import View.Texture.*;
 
 public class TetrisView {
@@ -13,17 +12,11 @@ public class TetrisView {
 	private TetrisTexture[] tetrisTextures;
 	private TetrisTexture currentTexture;
 	private enum TextureName { B10401020, B10401023, B10404011, B10415007, F10615001 };
-	
-	public TetrisWindow getTetrisWindow() {
-		
-		return tetrisWindow;
-		
-	}
 
-	public TetrisView(Point currentBlockPosition, int currentBlockKind, int currentBlockRotation) {
+	public TetrisView(TetrisBlock firstBlock) {
 		
 		textureSetting(TextureName.B10415007);
-		tetrisWindow = new TetrisWindow(currentTexture, currentBlockPosition, currentBlockKind, currentBlockRotation);
+		tetrisWindow = new TetrisWindow(currentTexture, firstBlock);
 		tetrisWindow.setVisible(true);
 		
 	}
@@ -43,27 +36,27 @@ public class TetrisView {
 		
 	}
 	
-	public void addTetrisButtonListeners(ActionListener listenForContinue, ActionListener listenForRestart, ActionListener listenForExit) {
-	
-		tetrisWindow.addButtonListeners(listenForContinue, listenForRestart, listenForExit);
-	
-	}
-	
-	public void addTetrisKeyListener(KeyListener keyListener) {
+	public TetrisBoard getTetrisBoard() {
 		
-		tetrisWindow.addKeyListener(keyListener);
+		return tetrisWindow.getTetrisBoard();
 		
 	}
 	
-	public void repaintTetrisBoard(int[][] board, Point currentBlockPosition, int currentBlockKind, int currentBlockRotation) {	
+	public void addPauseActions(ActionListener listenForContinue, ActionListener listenForRestart, ActionListener listenForQuit) {
+	
+		tetrisWindow.addPauseActions(listenForContinue, listenForRestart, listenForQuit);
+	
+	}
+	
+	public void repaintTetrisBoard(TetrisBlock currentBlock, int[][] board) {	
 		
-		tetrisWindow.repaintTetrisBoard(board, currentBlockPosition, currentBlockKind, currentBlockRotation);
+		tetrisWindow.repaintTetrisBoard(currentBlock, board);
 		
 	}
 	
-	public void setStopButtonsVisible(boolean b) {
+	public void setPauseActionsVisible(boolean b) {
 		
-		tetrisWindow.setStopButtonsVisible(b);
+		tetrisWindow.setPauseActionsVisible(b);
 		
 	}
 

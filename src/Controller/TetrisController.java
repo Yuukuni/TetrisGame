@@ -13,25 +13,24 @@ import View.TetrisView;
 
 public class TetrisController {
 	
-    private TetrisView theView;
-    private TetrisModel theModel;
-    
     private static final int IFW = JComponent.WHEN_IN_FOCUSED_WINDOW;
+    
     private static final String ROTATE = "ROTATE";
     private static final String MOVE_LEFT = "MOVE_LEFT";
     private static final String MOVE_RIGHT = "MOVE_RIGHT";
     private static final String DROP = "DROP";
+	
+    private TetrisView theView;
+    private TetrisModel theModel;
     
     public void GameStart() {
     	
     	theModel = new TetrisModel();
     	theModel.GameStart();
     	
-    	theView = new TetrisView(theModel.getCurrentBlockPosition(), theModel.getCurrentBlockKind(), theModel.getCurrentBlockRotation());
-
-/*      this.theView.addTetrisButtonListener(new ContinueButtonListener());
-        this.theView.addTetrisButtonListener(new RestartButtonListener());
-        this.theView.addTetrisButtonListener(new ExitButtonListener());*/
+    	theView = new TetrisView(theModel.getCurrentBlock());
+    	theView.addPauseActions(listenForContinue, listenForRestart, listenForQuit);
+    	
         addTetrisKeyListener();
     	
 		new Thread() {
@@ -41,39 +40,45 @@ public class TetrisController {
 					try {
 						Thread.sleep(1000);
 						theModel.drop();
-						theView.repaintTetrisBoard(theModel.getBoard(), theModel.getCurrentBlockPosition(), theModel.getCurrentBlockKind(), theModel.getCurrentBlockRotation());
+						theView.repaintTetrisBoard(theModel.getCurrentBlock(), theModel.getBoard());
 					} catch ( InterruptedException e ) {}
 				}
 			}
 		}.start();
     	
     }
-   
-    public class ContinueButtonListener implements ActionListener{
 
-        public void actionPerformed(ActionEvent e) {
-            
-        }
-        
-    }
+	private ActionListener listenForContinue = new ActionListener() {
 
-    public class RestartButtonListener implements ActionListener{
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			
+			
+		}
+	
+	};
+	
+	private ActionListener listenForRestart = new ActionListener() {
 
-        public void actionPerformed(ActionEvent e) {
-                        
-        }
-        
-    }
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			
+			
+		}
+	
+	};
+	
+	private ActionListener listenForQuit = new ActionListener() {
 
-    public class ExitButtonListener implements ActionListener{
-
-        public void actionPerformed(ActionEvent e) {
-                        
-        }
-        
-    }
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			
+			
+		}
+	
+	};
     
-    private Action rotate = new AbstractAction() {
+	private Action rotate = new AbstractAction() {
 
 		private static final long serialVersionUID = 1L;
 
@@ -81,7 +86,7 @@ public class TetrisController {
 		public void actionPerformed(ActionEvent arg0) {
 			
 			theModel.rotate();
-			theView.repaintTetrisBoard(theModel.getBoard(), theModel.getCurrentBlockPosition(), theModel.getCurrentBlockKind(), theModel.getCurrentBlockRotation());
+			theView.repaintTetrisBoard(theModel.getCurrentBlock(), theModel.getBoard());
 			
 		}
     	
@@ -95,7 +100,7 @@ public class TetrisController {
 		public void actionPerformed(ActionEvent arg0) {
 			
 			theModel.move(-1);
-			theView.repaintTetrisBoard(theModel.getBoard(), theModel.getCurrentBlockPosition(), theModel.getCurrentBlockKind(), theModel.getCurrentBlockRotation());
+			theView.repaintTetrisBoard(theModel.getCurrentBlock(), theModel.getBoard());
 			
 		}
     	
@@ -109,12 +114,12 @@ public class TetrisController {
 		public void actionPerformed(ActionEvent arg0) {
 			
 			theModel.move(1);
-			theView.repaintTetrisBoard(theModel.getBoard(), theModel.getCurrentBlockPosition(), theModel.getCurrentBlockKind(), theModel.getCurrentBlockRotation());
+			theView.repaintTetrisBoard(theModel.getCurrentBlock(), theModel.getBoard());
 			
 		}
     	
     };
-    
+        
     private Action drop = new AbstractAction() {
 
 		private static final long serialVersionUID = 1L;
@@ -123,7 +128,7 @@ public class TetrisController {
 		public void actionPerformed(ActionEvent arg0) {
 			
 			theModel.drop();
-			theView.repaintTetrisBoard(theModel.getBoard(), theModel.getCurrentBlockPosition(), theModel.getCurrentBlockKind(), theModel.getCurrentBlockRotation());
+			theView.repaintTetrisBoard(theModel.getCurrentBlock(), theModel.getBoard());
 			
 		}
     	
@@ -131,15 +136,15 @@ public class TetrisController {
     
     private void addTetrisKeyListener() {
     	
-    	 theView.getTetrisWindow().getTetrisBoard().getInputMap(IFW).put(KeyStroke.getKeyStroke("UP"), ROTATE);
-    	 theView.getTetrisWindow().getTetrisBoard().getInputMap(IFW).put(KeyStroke.getKeyStroke("LEFT"), MOVE_LEFT);
-    	 theView.getTetrisWindow().getTetrisBoard().getInputMap(IFW).put(KeyStroke.getKeyStroke("RIGHT"), MOVE_RIGHT);
-    	 theView.getTetrisWindow().getTetrisBoard().getInputMap(IFW).put(KeyStroke.getKeyStroke("DOWN"), DROP);
+    	 theView.getTetrisBoard().getInputMap(IFW).put(KeyStroke.getKeyStroke("UP"), ROTATE);
+    	 theView.getTetrisBoard().getInputMap(IFW).put(KeyStroke.getKeyStroke("LEFT"), MOVE_LEFT);
+    	 theView.getTetrisBoard().getInputMap(IFW).put(KeyStroke.getKeyStroke("RIGHT"), MOVE_RIGHT);
+    	 theView.getTetrisBoard().getInputMap(IFW).put(KeyStroke.getKeyStroke("DOWN"), DROP);
 
-    	 theView.getTetrisWindow().getTetrisBoard().getActionMap().put(ROTATE, rotate);
-    	 theView.getTetrisWindow().getTetrisBoard().getActionMap().put(MOVE_LEFT, moveLeft);
-    	 theView.getTetrisWindow().getTetrisBoard().getActionMap().put(MOVE_RIGHT, moveRight);
-    	 theView.getTetrisWindow().getTetrisBoard().getActionMap().put(DROP, drop);
+    	 theView.getTetrisBoard().getActionMap().put(ROTATE, rotate);
+    	 theView.getTetrisBoard().getActionMap().put(MOVE_LEFT, moveLeft);
+    	 theView.getTetrisBoard().getActionMap().put(MOVE_RIGHT, moveRight);
+    	 theView.getTetrisBoard().getActionMap().put(DROP, drop);
 
     }
  

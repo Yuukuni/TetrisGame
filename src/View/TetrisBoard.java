@@ -10,23 +10,13 @@ import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
+import Model.TetrisBlock;
 import View.Texture.*;
 
 public class TetrisBoard extends JPanel { 
 	
 	private static final long serialVersionUID = 1L;
 	
-	private BufferedImage[] blocks;
-	
-	private int[][] board;
-	private Point currentBlockPosition;
-	private int currentBlockKind;
-	private int currentBlockRotation;
-	
-	private JButton continueButton;
-    private JButton restartButton;
-    private JButton exitButton;
-    
 	public static final int BLOCK_KINDS = 9;
 	public static final int BLOCK_PIXEL = 30;						 
 	public static final int WIDTH_BLOCKS = 12, HEIGHT_BLOCKS = 21;
@@ -89,34 +79,31 @@ public class TetrisBoard extends JPanel {
 			}
 	};
 	
+	private TetrisBlock currentBlock;
+	private int[][] board;
+	
+	private BufferedImage[] blocks;
+	
+	private JButton continueButton;
+    private JButton restartButton;
+    private JButton quitButton;
+	
+	public void setCurrentBlock(TetrisBlock currentBlock) {
+		
+		this.currentBlock = currentBlock;
+	
+	}
+	
 	public void setBoard(int[][] board) {
 		
 		this.board = board;
 		
 	}
 	
-	public void setCurrentBlockPosition(Point position) {
-		
-		this.currentBlockPosition = position;
-		
-	}
-	
-	public void setCurrentBlockKind(int kind) {
-		
-		this.currentBlockKind = kind;
-		
-	}
-	
-	public void setCurrentBlockRotation(int rotation) {
-		
-		this.currentBlockRotation = rotation;
-		
-	}
-	
-	public TetrisBoard(TetrisTexture currentTexture, Point currentBlockPosition, int currentBlockKind, int currentBlockRotation) {
+	public TetrisBoard(TetrisTexture currentTexture, TetrisBlock firstBlock) {
 		
 		textureSetting(currentTexture);
-		init(currentBlockPosition, currentBlockKind, currentBlockRotation);
+		init(firstBlock);
 		
 	}
 	
@@ -140,12 +127,9 @@ public class TetrisBoard extends JPanel {
 		
 	}
 	
-	private void init(Point currentBlockPosition, int currentBlockKind, int currentBlockRotation) {
+	private void init(TetrisBlock firstBlock) {
 		
-		this.currentBlockPosition = new Point(currentBlockPosition.x, currentBlockPosition.y);
-		this.currentBlockKind = currentBlockKind;
-		this.currentBlockRotation = currentBlockRotation;
-		
+		currentBlock = firstBlock;
 		board = new int[WIDTH_BLOCKS][HEIGHT_BLOCKS];
 		for(int i = 0; i < WIDTH_BLOCKS; i++) {
 			for(int j = 0; j < HEIGHT_BLOCKS; j++) {
@@ -157,7 +141,6 @@ public class TetrisBoard extends JPanel {
 				}
 			}
 		}
-		
 		initButtons();
 		
 	}
@@ -172,27 +155,27 @@ public class TetrisBoard extends JPanel {
 		restartButton.setBounds(135, 290, 100, 30);
 		this.add(restartButton);
 		
-		exitButton = new JButton("Exit");
-		exitButton.setBounds(135, 340, 100, 30);
-		this.add(exitButton);
+		quitButton = new JButton("Quit");
+		quitButton.setBounds(135, 340, 100, 30);
+		this.add(quitButton);
 		
-		setButtonsVisible(false);
-		
-	}
-	
-	public void setButtonsVisible(boolean b) {
-		
-		continueButton.setVisible(b);
-		restartButton.setVisible(b);
-		exitButton.setVisible(b);
+		setPauseActionsVisible(false);
 		
 	}
 	
-	public void addButtonListeners(ActionListener listenForContinue, ActionListener listenForRestart, ActionListener listenForExit) {
+	public void addPauseActions(ActionListener listenForContinue, ActionListener listenForRestart, ActionListener listenForQuit) {
 		
 		continueButton.addActionListener(listenForContinue);
 		restartButton.addActionListener(listenForRestart);
-		exitButton.addActionListener(listenForExit);
+		quitButton.addActionListener(listenForQuit);
+		
+	}
+	
+	public void setPauseActionsVisible(boolean b) {
+		
+		continueButton.setVisible(b);
+		restartButton.setVisible(b);
+		quitButton.setVisible(b);
 		
 	}
 	
@@ -200,23 +183,24 @@ public class TetrisBoard extends JPanel {
 		
 		super.paintComponent(g);
 		
+		Point position = currentBlock.getPosition();
+		int kind = currentBlock.getKind();
+		int rotation = currentBlock.getRotation();
+		
 		for(int i = 0; i < WIDTH_BLOCKS; i++){
 			for(int j = 0; j < HEIGHT_BLOCKS; j++){
-				int currentBlock = board[i][j];
-			    g.drawImage(blocks[currentBlock], i * BLOCK_PIXEL, j * BLOCK_PIXEL, null);
+				int theKind = board[i][j];
+			    g.drawImage(blocks[theKind], i * BLOCK_PIXEL, j * BLOCK_PIXEL, null);
 			}
 		}
 		
-		for(Point p : TetrisBlocks[currentBlockKind][currentBlockRotation]) {
-			
-			g.drawImage(blocks[currentBlockKind], (currentBlockPosition.x + p.x) * BLOCK_PIXEL, (currentBlockPosition.y + p.y) * BLOCK_PIXEL, null);
-			
+		for(Point p : TetrisBlocks[kind][rotation]) {
+			g.drawImage(blocks[kind], (position.x + p.x) * BLOCK_PIXEL, (position.y + p.y) * BLOCK_PIXEL, null);
 		}
 		
 		for(int i = 0; i < WIDTH_BLOCKS + 1; i++) {
 			g.drawLine(i * BLOCK_PIXEL, 0, i * BLOCK_PIXEL, HEIGHT_BLOCKS * BLOCK_PIXEL);
 		}
-		
 		for(int i = 0; i < HEIGHT_BLOCKS + 1; i++){
 			g.drawLine(0, i * BLOCK_PIXEL, WIDTH_BLOCKS * BLOCK_PIXEL, i * BLOCK_PIXEL);
 		}

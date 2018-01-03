@@ -6,26 +6,10 @@ import java.util.Collections;
 
 public class TetrisGame {
 	
-	private long score;
-	
-	public enum Blocks { Blue, Cyan, Green, Orange, Purple, Red, Yellow, Wall, None };
-	private Blocks[][] board;
-	
-	private ArrayList<Integer> currentBlocks = new ArrayList<Integer>();
-	private ArrayList<Integer> nextBlocks = new ArrayList<Integer>();
-	
-	private Point currentBlockPosition;
-	private int currentBlockKind;
-	private int currentBlockRotation;
-	
 	public static final int WIDTH_BLOCKS = 12;
 	public static final int HEIGHT_BLOCKS = 21;
 	
-	private static final int START_POSITION_X = 5;
-	private static final int START_POSITION_Y = 0;
-	private static final int START_ROTATION = 0;
-	
-	private static final Point[][][] TetrisBlocks = {
+	public static final Point[][][] TetrisBlocks = {
 			// I-Piece
 			{
 				{ new Point(0, 1), new Point(1, 1), new Point(2, 1), new Point(3, 1) },
@@ -83,7 +67,17 @@ public class TetrisGame {
 			}
 	};
 	
-	private static Blocks Blocks(int kind) {
+	private int level;
+	private long score;
+	
+	private TetrisBlock currentBlock;
+	private ArrayList<Integer> currentBlocks;
+	private ArrayList<Integer> nextBlocks;
+	
+	public enum Blocks { Blue, Cyan, Green, Orange, Purple, Red, Yellow, Wall, None };
+	private Blocks[][] board;
+	
+	private static Blocks blockValue(int kind) {
 		
 		switch(kind) {
 			case 0: return Blocks.Blue;
@@ -100,13 +94,43 @@ public class TetrisGame {
 		
 	}
 	
-	public long score() { 
+	public int getLevel() {
+		
+		return level;
+		
+	}
+	
+	public void setLevel(int level) {
+		
+		this.level = level;
+		
+	}
+	
+	public long getScore() { 
 		
 		return score;
 		
 	}
 	
-	public int[][] intBoard() {
+	public TetrisBlock getCurrentBlock() {
+		
+		return currentBlock;
+		
+	}
+	
+	public ArrayList<Integer> getCurrentBlocks() {
+		
+		return currentBlocks;
+	
+	}
+	
+	public ArrayList<Integer> getNextBlocks() {
+		
+		return nextBlocks;
+		
+	}
+	
+	public int[][] getBoard() {
 		
 		int[][] intBoard = new int[WIDTH_BLOCKS][HEIGHT_BLOCKS];
 		for(int i = 0; i < WIDTH_BLOCKS; ++i) {
@@ -118,42 +142,6 @@ public class TetrisGame {
 		
 	}
 	
-	public ArrayList<Integer> currentBlocks() {
-		
-		return currentBlocks;
-	
-	}
-	
-	public ArrayList<Integer> nextBlocks() {
-		
-		return nextBlocks;
-		
-	}
-	
-	public Point currentBlockPosition() {
-		
-		return currentBlockPosition;
-		
-	}
-	
-	public int currentBlockKind() {
-		
-		return currentBlockKind;
-		
-	}
-	
-	public int currentBlockRotation() {
-		
-		return currentBlockRotation;
-		
-	}
-	
-	public Point[][][] TetrisBlocks() {
-		
-		return TetrisBlocks;
-		
-	}
-	
 	public TetrisGame() {
 		
 		initGame();
@@ -162,7 +150,13 @@ public class TetrisGame {
 	
 	private void initGame() {
 	
+		level = 0;
 		score = 0;
+		
+		currentBlocks = blocksRandomlyGenerated();
+		nextBlocks = blocksRandomlyGenerated();
+		newCurrentBlock();
+		
 		board = new Blocks[WIDTH_BLOCKS][HEIGHT_BLOCKS];
 		for (int i = 0; i < WIDTH_BLOCKS; ++i) {
 			for (int j = 0; j < HEIGHT_BLOCKS; ++j) {
@@ -173,41 +167,42 @@ public class TetrisGame {
 				}
 			}
 		}
-		Collections.addAll(currentBlocks, 0, 1, 2, 3, 4, 5, 6);
-		Collections.shuffle(currentBlocks);
-		Collections.addAll(nextBlocks, 0, 1, 2, 3, 4, 5, 6);
-		Collections.shuffle(nextBlocks);
-		newBlock();
 	
 	}
 	
-	private void newBlock() {
+	private ArrayList<Integer> blocksRandomlyGenerated() {
 		
-		currentBlockPosition = new Point(START_POSITION_X, START_POSITION_Y);
-		currentBlockKind = currentBlocks.get(0);
-		currentBlockRotation = START_ROTATION;
+		ArrayList<Integer> blocks = new ArrayList<Integer>();
+		Collections.addAll(blocks, 0, 1, 2, 3, 4, 5, 6);
+		Collections.shuffle(blocks);
+		return blocks;
+		
+	}
+	
+	private void newCurrentBlock() {
+		
+		currentBlock = new TetrisBlock(currentBlocks.get(0));
 		
 		if (nextBlocks.isEmpty()) {
-			Collections.addAll(nextBlocks, 0, 1, 2, 3, 4, 5, 6);
-			Collections.shuffle(nextBlocks);
+			nextBlocks = blocksRandomlyGenerated();
 		}
-		
-		int nextFirstBlock = nextBlocks.get(0);
 		
 		for(int i = 0; i < 6; ++i) {
-			currentBlocks.set(i, currentBlocks.get(i+1));
-			if(i < (nextBlocks.size() - 1)) {
-				nextBlocks.set(i, nextBlocks.get(i+1));
-			}
+			currentBlocks.set(i, currentBlocks.get(i + 1));
 		}
-		currentBlocks.set(6, nextFirstBlock);
+		currentBlocks.set(6, nextBlocks.get(0));
+		
+		for(int i = 0; i < (nextBlocks.size() - 1); ++i) {
+			nextBlocks.set(i, nextBlocks.get(i + 1));
+		}
 		nextBlocks.remove(nextBlocks.size() - 1);
 		
 	}
 	
 	private boolean collidesAt(int x, int y, int rotation) {
 		
-		for (Point p : TetrisBlocks[currentBlockKind][rotation]) {
+		int kind = currentBlock.getKind();
+		for (Point p : TetrisBlocks[kind][rotation]) {
 			if (board[p.x + x][p.y + y] != Blocks.None) {
 				return true;
 			}
@@ -218,25 +213,25 @@ public class TetrisGame {
 	
 	public void rotate() {
 		
-		int newRotation = (currentBlockRotation + 1) % 4;
-		if (!collidesAt(currentBlockPosition.x, currentBlockPosition.y, newRotation)) {
-			currentBlockRotation = newRotation;
+		int newRotation = (currentBlock.getRotation() + 1) % 4;
+		if (!collidesAt(currentBlock.getPosition().x, currentBlock.getPosition().y, newRotation)) {
+			currentBlock.setRotation(newRotation);
 		}
 
 	}
 	
 	public void move(int i) {
 		
-		if (!collidesAt(currentBlockPosition.x + i, currentBlockPosition.y, currentBlockRotation)) {
-			currentBlockPosition.x += i;	
+		if (!collidesAt(currentBlock.getPosition().x + i, currentBlock.getPosition().y, currentBlock.getRotation())) {
+			currentBlock.move(i);	
 		}
 		
 	}
 	
 	public void drop() {
 		
-		if (!collidesAt(currentBlockPosition.x, currentBlockPosition.y + 1, currentBlockRotation)) {
-			currentBlockPosition.y++;
+		if (!collidesAt(currentBlock.getPosition().x, currentBlock.getPosition().y + 1, currentBlock.getRotation())) {
+			currentBlock.drop();
 		} else {
 			updateBoard();
 		}	
@@ -245,11 +240,15 @@ public class TetrisGame {
 	
 	private void updateBoard() {
 		
-		for (Point p : TetrisBlocks[currentBlockKind][currentBlockRotation]) {
-			board[currentBlockPosition.x + p.x][currentBlockPosition.y + p.y] = Blocks(currentBlockKind);
+		Point position = currentBlock.getPosition();
+		int kind = currentBlock.getKind();
+		int rotation = currentBlock.getRotation();
+		
+		for (Point p : TetrisBlocks[kind][rotation]) {
+			board[position.x + p.x][position.y + p.y] = blockValue(kind);
 		}
 		clearLines();
-		newBlock();
+		newCurrentBlock();
 		
 	}
 	
@@ -257,9 +256,9 @@ public class TetrisGame {
 		
 		boolean needClear;
 		int clearLines = 0;
-		for (int j = HEIGHT_BLOCKS - 2; j > 0; j--) {
+		for (int j = (HEIGHT_BLOCKS - 2); j > 0; --j) {
 			needClear = true;
-			for (int i = 1; i < (WIDTH_BLOCKS - 1); i++) {
+			for (int i = 1; i < (WIDTH_BLOCKS - 1); ++i) {
 				if (board[i][j] == Blocks.None) {
 					needClear = false;
 					break;

@@ -1,6 +1,5 @@
 package Model;
 
-import java.awt.Point;
 import java.util.ArrayList;
 
 public class TetrisModel {
@@ -13,50 +12,45 @@ public class TetrisModel {
 	
 	}
 	
-	public long getScore() {
+	public int getLevel() {
 		
-		return game.score();
+		return game.getLevel();
 		
 	}
 	
-	public int[][] getBoard() {
+	public void setLevel(int level) {
 		
-		return game.intBoard();
+		game.setLevel(level);
+		
+	}
+	
+	public long getScore() {
+		
+		return game.getScore();
+		
+	}
+
+	public TetrisBlock getCurrentBlock() {
+		
+		return game.getCurrentBlock();
 		
 	}
 	
 	public ArrayList<Integer> getCurrentBlocks() {
 		
-		return game.currentBlocks();
+		return game.getCurrentBlocks();
 		
 	}
 	
 	public ArrayList<Integer> getNextBlocks() {
 		
-		return game.nextBlocks();
+		return game.getNextBlocks();
 		
 	}
 	
-	public Point getCurrentBlockPosition() {
+	public int[][] getBoard() {
 		
-		return game.currentBlockPosition();
-		
-	}
-	
-	public int getCurrentBlockKind() {
-		
-		return game.currentBlockKind();
-	}
-	
-	public int getCurrentBlockRotation() {
-		
-		return game.currentBlockRotation();
-		
-	}
-	
-	public Point[][][] getTetrisBlocks() {
-		
-		return game.TetrisBlocks();
+		return game.getBoard();
 		
 	}
 	

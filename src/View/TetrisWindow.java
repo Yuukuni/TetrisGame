@@ -1,26 +1,18 @@
 package View;
 
-import java.awt.Point;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyListener;
 
 import javax.swing.JFrame;
 
-
+import Model.TetrisBlock;
 import View.Texture.*;
 
 public class TetrisWindow {
 	
-	private JFrame tetrisWindow;
+	private JFrame window;
 	private TetrisBoard tetrisBoard;
 	
-	public TetrisBoard getTetrisBoard() {
-		
-		return tetrisBoard;
-		
-	}
-	
-	public TetrisWindow(TetrisTexture currentTexture, Point currentBlockPosition, int currentBlockKind, int currentBlockRotation) {
+	public TetrisWindow(TetrisTexture currentTexture, TetrisBlock firstBlock) {
 		
 		int boardWidth = TetrisBoard.WIDTH_BLOCKS * TetrisBoard.BLOCK_PIXEL + 1;
 		int boardHeight = TetrisBoard.HEIGHT_BLOCKS * TetrisBoard.BLOCK_PIXEL + 1;
@@ -31,51 +23,49 @@ public class TetrisWindow {
 		int windowHeightCorrected = TetrisBoard.BLOCK_PIXEL;
 		int windowHeight = boardHeight * 1 + windowHeightCorrected;
 			
-		tetrisWindow = new JFrame("Tetris Game");
-		tetrisWindow.setLayout(null);
-		tetrisWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		tetrisWindow.setSize(windowWidth, windowHeight);
-		tetrisWindow.setResizable(false);
-		tetrisWindow.setLayout(null);
+		window = new JFrame("Tetris Game");
+		window.setLayout(null);
+		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		window.setSize(windowWidth, windowHeight);
+		window.setResizable(false);
+		window.setLayout(null);
 		
-		tetrisBoard = new TetrisBoard(currentTexture, currentBlockPosition, currentBlockKind, currentBlockRotation);
+		tetrisBoard = new TetrisBoard(currentTexture, firstBlock);
 		tetrisBoard.setLayout(null);
 		tetrisBoard.setBounds(boardX, boardY, boardWidth, boardHeight);
-		tetrisWindow.add(tetrisBoard);
+		window.add(tetrisBoard);
 		
+	}
+	
+	public TetrisBoard getTetrisBoard() {
+		
+		return tetrisBoard;
+		
+	}
+	
+	public void addPauseActions(ActionListener listenForContinue, ActionListener listenForRestart, ActionListener listenForQuit) {
+		
+		tetrisBoard.addPauseActions(listenForContinue, listenForRestart, listenForQuit);
+	
 	}
 	
 	public void setVisible(boolean b) {
 		
-		tetrisWindow.setVisible(b);
+		window.setVisible(b);
 		
 	}
 	
-	public void addButtonListeners(ActionListener listenForContinue, ActionListener listenForRestart, ActionListener listenForExit){
+	public void repaintTetrisBoard(TetrisBlock currentBlock, int[][] board) {
 		
-		tetrisBoard.addButtonListeners(listenForContinue, listenForRestart, listenForExit);
-	
-	}
-	
-	public void addKeyListener(KeyListener keyListener){
-		
-		tetrisBoard.addKeyListener(keyListener);
-		
-	}
-	
-	public void repaintTetrisBoard(int[][] board, Point currentBlockPosition, int currentBlockKind, int currentBlockRotation) {
-		
+		tetrisBoard.setCurrentBlock(currentBlock);
 		tetrisBoard.setBoard(board);
-		tetrisBoard.setCurrentBlockPosition(currentBlockPosition);
-		tetrisBoard.setCurrentBlockKind(currentBlockKind);
-		tetrisBoard.setCurrentBlockRotation(currentBlockRotation);
 		tetrisBoard.repaint();
 		
 	}
 	
-	public void setStopButtonsVisible(boolean b) {
+	public void setPauseActionsVisible(boolean b) {
 		
-		tetrisBoard.setButtonsVisible(b);
+		tetrisBoard.setPauseActionsVisible(b);
 		
 	}
 
