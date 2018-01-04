@@ -26,7 +26,6 @@ public class TetrisWindow {
 		tetrisBoard = new TetrisBoard(currentTexture, firstBlock);
 		tetrisBoard.setBounds(BOARD_X, BOARD_Y, BOARD_WIDTH, BOARD_HEIGHT);
 		tetrisBoard.setLayout(null);
-		tetrisBoard.setPauseActionsVisible(true);
 		
 		window = new JFrame("Tetris Game");
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
