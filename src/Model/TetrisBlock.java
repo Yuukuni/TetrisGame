@@ -4,6 +4,64 @@ import java.awt.Point;
 
 public class TetrisBlock {
 	
+	public static final Point[][][] Shapes = {
+			// I-Piece
+			{
+				{ new Point(-1, 1), new Point(0, 1), new Point(1, 1), new Point(2, 1) },
+				{ new Point(1, 0), new Point(1, 1), new Point(1, 2), new Point(1, 3) },
+				{ new Point(-1, 1), new Point(0, 1), new Point(1, 1), new Point(2, 1) },
+				{ new Point(1, 0), new Point(1, 1), new Point(1, 2), new Point(1, 3) }
+			},
+			
+			// J-Piece
+			{
+				{ new Point(0, 1), new Point(1, 1), new Point(2, 1), new Point(2, 0) },
+				{ new Point(1, 0), new Point(1, 1), new Point(1, 2), new Point(2, 2) },
+				{ new Point(0, 1), new Point(1, 1), new Point(2, 1), new Point(0, 2) },
+				{ new Point(1, 0), new Point(1, 1), new Point(1, 2), new Point(0, 0) }
+			},
+			
+			// L-Piece
+			{
+				{ new Point(0, 1), new Point(1, 1), new Point(2, 1), new Point(2, 2) },
+				{ new Point(1, 0), new Point(1, 1), new Point(1, 2), new Point(0, 2) },
+				{ new Point(0, 1), new Point(1, 1), new Point(2, 1), new Point(0, 0) },
+				{ new Point(1, 0), new Point(1, 1), new Point(1, 2), new Point(2, 0) }
+			},
+			
+			// O-Piece
+			{
+				{ new Point(0, 0), new Point(0, 1), new Point(1, 0), new Point(1, 1) },
+				{ new Point(0, 0), new Point(0, 1), new Point(1, 0), new Point(1, 1) },
+				{ new Point(0, 0), new Point(0, 1), new Point(1, 0), new Point(1, 1) },
+				{ new Point(0, 0), new Point(0, 1), new Point(1, 0), new Point(1, 1) }
+			},
+			
+			// S-Piece
+			{
+				{ new Point(1, 0), new Point(2, 0), new Point(0, 1), new Point(1, 1) },
+				{ new Point(0, 0), new Point(0, 1), new Point(1, 1), new Point(1, 2) },
+				{ new Point(1, 0), new Point(2, 0), new Point(0, 1), new Point(1, 1) },
+				{ new Point(0, 0), new Point(0, 1), new Point(1, 1), new Point(1, 2) }
+			},
+			
+			// T-Piece
+			{
+				{ new Point(1, 0), new Point(0, 1), new Point(1, 1), new Point(2, 1) },
+				{ new Point(1, 0), new Point(0, 1), new Point(1, 1), new Point(1, 2) },
+				{ new Point(0, 1), new Point(1, 1), new Point(2, 1), new Point(1, 2) },
+				{ new Point(1, 0), new Point(1, 1), new Point(2, 1), new Point(1, 2) }
+			},
+			
+			// Z-Piece
+			{
+				{ new Point(0, 0), new Point(1, 0), new Point(1, 1), new Point(2, 1) },
+				{ new Point(1, 0), new Point(0, 1), new Point(1, 1), new Point(0, 2) },
+				{ new Point(0, 0), new Point(1, 0), new Point(1, 1), new Point(2, 1) },
+				{ new Point(1, 0), new Point(0, 1), new Point(1, 1), new Point(0, 2) }
+			}
+	};
+	
 	public static final int START_POSITION_X = 5;
 	public static final int START_POSITION_Y = 0;
 	public static final int START_ROTATION = 0;
@@ -73,6 +131,12 @@ public class TetrisBlock {
 	public void drop() {
 		
 		position.y++;
+		
+	}
+	
+	public Point[] getShape() {
+		
+		return Shapes[kind][rotation];
 		
 	}
 	

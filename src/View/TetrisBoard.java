@@ -11,6 +11,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import Model.TetrisBlock;
+import Model.TetrisGame;
 import View.Texture.*;
 
 public class TetrisBoard extends JPanel { 
@@ -19,65 +20,6 @@ public class TetrisBoard extends JPanel {
 	
 	public static final int BLOCK_KINDS = 9;
 	public static final int BLOCK_PIXEL = 30;						 
-	public static final int WIDTH_BLOCKS = 12, HEIGHT_BLOCKS = 21;
-	
-	private static final Point[][][] TetrisBlocks = {
-			// I-Piece
-			{
-				{ new Point(0, 1), new Point(1, 1), new Point(2, 1), new Point(3, 1) },
-				{ new Point(1, 0), new Point(1, 1), new Point(1, 2), new Point(1, 3) },
-				{ new Point(0, 1), new Point(1, 1), new Point(2, 1), new Point(3, 1) },
-				{ new Point(1, 0), new Point(1, 1), new Point(1, 2), new Point(1, 3) }
-			},
-			
-			// J-Piece
-			{
-				{ new Point(0, 1), new Point(1, 1), new Point(2, 1), new Point(2, 0) },
-				{ new Point(1, 0), new Point(1, 1), new Point(1, 2), new Point(2, 2) },
-				{ new Point(0, 1), new Point(1, 1), new Point(2, 1), new Point(0, 2) },
-				{ new Point(1, 0), new Point(1, 1), new Point(1, 2), new Point(0, 0) }
-			},
-			
-			// L-Piece
-			{
-				{ new Point(0, 1), new Point(1, 1), new Point(2, 1), new Point(2, 2) },
-				{ new Point(1, 0), new Point(1, 1), new Point(1, 2), new Point(0, 2) },
-				{ new Point(0, 1), new Point(1, 1), new Point(2, 1), new Point(0, 0) },
-				{ new Point(1, 0), new Point(1, 1), new Point(1, 2), new Point(2, 0) }
-			},
-			
-			// O-Piece
-			{
-				{ new Point(0, 0), new Point(0, 1), new Point(1, 0), new Point(1, 1) },
-				{ new Point(0, 0), new Point(0, 1), new Point(1, 0), new Point(1, 1) },
-				{ new Point(0, 0), new Point(0, 1), new Point(1, 0), new Point(1, 1) },
-				{ new Point(0, 0), new Point(0, 1), new Point(1, 0), new Point(1, 1) }
-			},
-			
-			// S-Piece
-			{
-				{ new Point(1, 0), new Point(2, 0), new Point(0, 1), new Point(1, 1) },
-				{ new Point(0, 0), new Point(0, 1), new Point(1, 1), new Point(1, 2) },
-				{ new Point(1, 0), new Point(2, 0), new Point(0, 1), new Point(1, 1) },
-				{ new Point(0, 0), new Point(0, 1), new Point(1, 1), new Point(1, 2) }
-			},
-			
-			// T-Piece
-			{
-				{ new Point(1, 0), new Point(0, 1), new Point(1, 1), new Point(2, 1) },
-				{ new Point(1, 0), new Point(0, 1), new Point(1, 1), new Point(1, 2) },
-				{ new Point(0, 1), new Point(1, 1), new Point(2, 1), new Point(1, 2) },
-				{ new Point(1, 0), new Point(1, 1), new Point(2, 1), new Point(1, 2) }
-			},
-			
-			// Z-Piece
-			{
-				{ new Point(0, 0), new Point(1, 0), new Point(1, 1), new Point(2, 1) },
-				{ new Point(1, 0), new Point(0, 1), new Point(1, 1), new Point(0, 2) },
-				{ new Point(0, 0), new Point(1, 0), new Point(1, 1), new Point(2, 1) },
-				{ new Point(1, 0), new Point(0, 1), new Point(1, 1), new Point(0, 2) }
-			}
-	};
 	
 	private TetrisBlock currentBlock;
 	private int[][] board;
@@ -130,10 +72,10 @@ public class TetrisBoard extends JPanel {
 	private void init(TetrisBlock firstBlock) {
 		
 		currentBlock = firstBlock;
-		board = new int[WIDTH_BLOCKS][HEIGHT_BLOCKS];
-		for(int i = 0; i < WIDTH_BLOCKS; i++) {
-			for(int j = 0; j < HEIGHT_BLOCKS; j++) {
-				if(i == 0 || i == (WIDTH_BLOCKS - 1) || j == (HEIGHT_BLOCKS - 1)) {
+		board = new int[TetrisGame.WIDTH_BLOCKS][TetrisGame.HEIGHT_BLOCKS];
+		for(int i = 0; i < TetrisGame.WIDTH_BLOCKS; i++) {
+			for(int j = 0; j < TetrisGame.HEIGHT_BLOCKS; j++) {
+				if(i == 0 || i == (TetrisGame.WIDTH_BLOCKS - 1) || j == (TetrisGame.HEIGHT_BLOCKS - 1)) {
 					board[i][j] = 7;
 				}
 				else {
@@ -183,26 +125,26 @@ public class TetrisBoard extends JPanel {
 		
 		super.paintComponent(g);
 		
-		Point position = currentBlock.getPosition();
-		int kind = currentBlock.getKind();
-		int rotation = currentBlock.getRotation();
-		
-		for(int i = 0; i < WIDTH_BLOCKS; i++){
-			for(int j = 0; j < HEIGHT_BLOCKS; j++){
+		for(int i = 0; i < TetrisGame.WIDTH_BLOCKS; i++){
+			for(int j = 0; j < TetrisGame.HEIGHT_BLOCKS; j++){
 				int theKind = board[i][j];
 			    g.drawImage(blocks[theKind], i * BLOCK_PIXEL, j * BLOCK_PIXEL, null);
 			}
 		}
 		
-		for(Point p : TetrisBlocks[kind][rotation]) {
-			g.drawImage(blocks[kind], (position.x + p.x) * BLOCK_PIXEL, (position.y + p.y) * BLOCK_PIXEL, null);
+		int x = currentBlock.getPosition().x;
+		int y = currentBlock.getPosition().y;
+		
+		for(Point p : currentBlock.getShape()) {
+			g.drawImage(blocks[currentBlock.getKind()], (x + p.x) * BLOCK_PIXEL, (y + p.y) * BLOCK_PIXEL, null);
 		}
 		
-		for(int i = 0; i < WIDTH_BLOCKS + 1; i++) {
-			g.drawLine(i * BLOCK_PIXEL, 0, i * BLOCK_PIXEL, HEIGHT_BLOCKS * BLOCK_PIXEL);
+		for(int i = 0; i < TetrisGame.WIDTH_BLOCKS + 1; i++) {
+			g.drawLine(i * BLOCK_PIXEL, 0, i * BLOCK_PIXEL, TetrisGame.HEIGHT_BLOCKS * BLOCK_PIXEL);
 		}
-		for(int i = 0; i < HEIGHT_BLOCKS + 1; i++){
-			g.drawLine(0, i * BLOCK_PIXEL, WIDTH_BLOCKS * BLOCK_PIXEL, i * BLOCK_PIXEL);
+		
+		for(int i = 0; i < TetrisGame.HEIGHT_BLOCKS + 1; i++){
+			g.drawLine(0, i * BLOCK_PIXEL, TetrisGame.WIDTH_BLOCKS * BLOCK_PIXEL, i * BLOCK_PIXEL);
 		}
 
 	}

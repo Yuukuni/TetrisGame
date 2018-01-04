@@ -1,9 +1,4 @@
-/Model/
-/View/
-/MVCTetris.class
-/TetrisController$ContinueButtonListener.class
-/TetrisController$ExitButtonListener.class
-/TetrisController$RestartButtonListener.class
-/TetrisController$TetrisKeyListener.class
-/Tetris.class
 /Controller/
+/Model/
+/Tetris.class
+/View/

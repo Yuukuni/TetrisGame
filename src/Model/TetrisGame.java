@@ -9,64 +9,6 @@ public class TetrisGame {
 	public static final int WIDTH_BLOCKS = 12;
 	public static final int HEIGHT_BLOCKS = 21;
 	
-	public static final Point[][][] TetrisBlocks = {
-			// I-Piece
-			{
-				{ new Point(0, 1), new Point(1, 1), new Point(2, 1), new Point(3, 1) },
-				{ new Point(1, 0), new Point(1, 1), new Point(1, 2), new Point(1, 3) },
-				{ new Point(0, 1), new Point(1, 1), new Point(2, 1), new Point(3, 1) },
-				{ new Point(1, 0), new Point(1, 1), new Point(1, 2), new Point(1, 3) }
-			},
-			
-			// J-Piece
-			{
-				{ new Point(0, 1), new Point(1, 1), new Point(2, 1), new Point(2, 0) },
-				{ new Point(1, 0), new Point(1, 1), new Point(1, 2), new Point(2, 2) },
-				{ new Point(0, 1), new Point(1, 1), new Point(2, 1), new Point(0, 2) },
-				{ new Point(1, 0), new Point(1, 1), new Point(1, 2), new Point(0, 0) }
-			},
-			
-			// L-Piece
-			{
-				{ new Point(0, 1), new Point(1, 1), new Point(2, 1), new Point(2, 2) },
-				{ new Point(1, 0), new Point(1, 1), new Point(1, 2), new Point(0, 2) },
-				{ new Point(0, 1), new Point(1, 1), new Point(2, 1), new Point(0, 0) },
-				{ new Point(1, 0), new Point(1, 1), new Point(1, 2), new Point(2, 0) }
-			},
-			
-			// O-Piece
-			{
-				{ new Point(0, 0), new Point(0, 1), new Point(1, 0), new Point(1, 1) },
-				{ new Point(0, 0), new Point(0, 1), new Point(1, 0), new Point(1, 1) },
-				{ new Point(0, 0), new Point(0, 1), new Point(1, 0), new Point(1, 1) },
-				{ new Point(0, 0), new Point(0, 1), new Point(1, 0), new Point(1, 1) }
-			},
-			
-			// S-Piece
-			{
-				{ new Point(1, 0), new Point(2, 0), new Point(0, 1), new Point(1, 1) },
-				{ new Point(0, 0), new Point(0, 1), new Point(1, 1), new Point(1, 2) },
-				{ new Point(1, 0), new Point(2, 0), new Point(0, 1), new Point(1, 1) },
-				{ new Point(0, 0), new Point(0, 1), new Point(1, 1), new Point(1, 2) }
-			},
-			
-			// T-Piece
-			{
-				{ new Point(1, 0), new Point(0, 1), new Point(1, 1), new Point(2, 1) },
-				{ new Point(1, 0), new Point(0, 1), new Point(1, 1), new Point(1, 2) },
-				{ new Point(0, 1), new Point(1, 1), new Point(2, 1), new Point(1, 2) },
-				{ new Point(1, 0), new Point(1, 1), new Point(2, 1), new Point(1, 2) }
-			},
-			
-			// Z-Piece
-			{
-				{ new Point(0, 0), new Point(1, 0), new Point(1, 1), new Point(2, 1) },
-				{ new Point(1, 0), new Point(0, 1), new Point(1, 1), new Point(0, 2) },
-				{ new Point(0, 0), new Point(1, 0), new Point(1, 1), new Point(2, 1) },
-				{ new Point(1, 0), new Point(0, 1), new Point(1, 1), new Point(0, 2) }
-			}
-	};
-	
 	private int level;
 	private long score;
 	
@@ -76,23 +18,6 @@ public class TetrisGame {
 	
 	public enum Blocks { Blue, Cyan, Green, Orange, Purple, Red, Yellow, Wall, None };
 	private Blocks[][] board;
-	
-	private static Blocks blockValue(int kind) {
-		
-		switch(kind) {
-			case 0: return Blocks.Blue;
-			case 1: return Blocks.Cyan;
-			case 2: return Blocks.Green;
-			case 3: return Blocks.Orange;
-			case 4: return Blocks.Purple;
-			case 5: return Blocks.Red;
-			case 6: return Blocks.Yellow;
-			case 7: return Blocks.Wall;
-			case 8: return Blocks.None;
-			default: return null;
-		}
-		
-	}
 	
 	public int getLevel() {
 		
@@ -201,8 +126,7 @@ public class TetrisGame {
 	
 	private boolean collidesAt(int x, int y, int rotation) {
 		
-		int kind = currentBlock.getKind();
-		for (Point p : TetrisBlocks[kind][rotation]) {
+		for (Point p : currentBlock.getShape()) {
 			if (board[p.x + x][p.y + y] != Blocks.None) {
 				return true;
 			}
@@ -213,7 +137,9 @@ public class TetrisGame {
 	
 	public void rotate() {
 		
-		int newRotation = (currentBlock.getRotation() + 1) % 4;
+		int currentRotation = currentBlock.getRotation();
+		int newRotation = (currentRotation + 1) % 4;
+		
 		if (!collidesAt(currentBlock.getPosition().x, currentBlock.getPosition().y, newRotation)) {
 			currentBlock.setRotation(newRotation);
 		}
@@ -240,12 +166,10 @@ public class TetrisGame {
 	
 	private void updateBoard() {
 		
-		Point position = currentBlock.getPosition();
-		int kind = currentBlock.getKind();
-		int rotation = currentBlock.getRotation();
-		
-		for (Point p : TetrisBlocks[kind][rotation]) {
-			board[position.x + p.x][position.y + p.y] = blockValue(kind);
+		int x = currentBlock.getPosition().x;
+		int y = currentBlock.getPosition().y;
+		for (Point p : currentBlock.getShape()) {
+			board[x + p.x][y + p.y] = Blocks.values()[currentBlock.getKind()];
 		}
 		clearLines();
 		newCurrentBlock();
