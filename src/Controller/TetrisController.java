@@ -458,3 +458,116 @@ public class TetrisController extends KeyAdapter {
         putTetrisKeyBindings();
     	
     }
+    
+    private void putTetrisKeyBindings() {
+    	
+    	putKeyBindings(theView.getTetrisBoard(), KeyStroke.getKeyStroke(theModel.getKeyCode(0), 0), TETRIS_ROTATE, tetrisRotate);
+    	putKeyBindings(theView.getTetrisBoard(), KeyStroke.getKeyStroke(theModel.getKeyCode(1), 0), TETRIS_MOVE_LEFT, tetrisMoveLeft);
+    	putKeyBindings(theView.getTetrisBoard(), KeyStroke.getKeyStroke(theModel.getKeyCode(2), 0), TETRIS_MOVE_RIGHT, tetrisMoveRight);
+    	putKeyBindings(theView.getTetrisBoard(), KeyStroke.getKeyStroke(theModel.getKeyCode(3), 0), TETRIS_DROP, tetrisDrop);
+    	putKeyBindings(theView.getTetrisBoard(), KeyStroke.getKeyStroke(theModel.getKeyCode(4), 0), TETRIS_DROP_DOWN, tetrisDropdown);
+    	putKeyBindings(theView.getTetrisBoard(), KeyStroke.getKeyStroke(theModel.getKeyCode(5), 0), TETRIS_PAUSE, tetrisPause);
+   	 
+    }
+    
+	private Action tetrisRotate = new AbstractAction() {
+
+		private static final long serialVersionUID = 1L;
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			
+			theModel.rotate();
+			theView.repaintTetrisBoard(theModel.getCurrentBlock(), theModel.getBoard());
+			
+		}
+    	
+    };
+    
+    private Action tetrisMoveLeft = new AbstractAction() {
+
+		private static final long serialVersionUID = 1L;
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			
+			theModel.move(-1);
+			theView.repaintTetrisBoard(theModel.getCurrentBlock(), theModel.getBoard());
+			
+		}
+    	
+    };
+    
+    private Action tetrisMoveRight = new AbstractAction() {
+
+		private static final long serialVersionUID = 1L;
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			
+			theModel.move(1);
+			theView.repaintTetrisBoard(theModel.getCurrentBlock(), theModel.getBoard());
+			
+		}
+    	
+    };
+        
+    private Action tetrisDrop = new AbstractAction() {
+
+		private static final long serialVersionUID = 1L;
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			
+			theModel.drop();
+			theModel.addScore(1);
+			dropRepaint();
+			
+		}
+    	
+    };
+    
+    private Action tetrisDropdown = new AbstractAction() {
+    	
+    	private static final long serialVersionUID = 1L;
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			
+			theModel.dropDown();
+			dropRepaint();
+			
+		}
+    	
+    };
+    
+    private Action tetrisPause = new AbstractAction() {
+    	
+    	private static final long serialVersionUID = 1L;
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+
+				theModel.setPause(true);
+				theView.setPause(true);
+				removeTetrisKeyBindings();
+				putPauseKeyBindings();
+			
+		}
+    	
+    };
+    
+    private void removeTetrisKeyBindings() {
+    	
+    	removeKeyBindings(theView.getTetrisBoard(), KeyStroke.getKeyStroke(theModel.getKeyCode(0), 0), TETRIS_ROTATE);
+    	removeKeyBindings(theView.getTetrisBoard(), KeyStroke.getKeyStroke(theModel.getKeyCode(1), 0), TETRIS_MOVE_LEFT);
+    	removeKeyBindings(theView.getTetrisBoard(), KeyStroke.getKeyStroke(theModel.getKeyCode(2), 0), TETRIS_MOVE_RIGHT);
+    	removeKeyBindings(theView.getTetrisBoard(), KeyStroke.getKeyStroke(theModel.getKeyCode(3), 0), TETRIS_DROP);
+    	removeKeyBindings(theView.getTetrisBoard(), KeyStroke.getKeyStroke(theModel.getKeyCode(4), 0), TETRIS_DROP_DOWN);
+    	removeKeyBindings(theView.getTetrisBoard(), KeyStroke.getKeyStroke(theModel.getKeyCode(5), 0), TETRIS_PAUSE);
+    	
+    }
+    
+    private void removeKeyBindings(JPanel board, KeyStroke key, String actionMapKey) {
+    	
+    	board.getInputMap(IFW).remove(key);
+    	board.getActionMap().remove(actionMapKey);
+    	
+    }
+    
+
+}
