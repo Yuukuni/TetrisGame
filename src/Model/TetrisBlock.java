@@ -15,7 +15,7 @@ public class TetrisBlock {
 			
 			// J-Piece
 			{
-				{ new Point(0, 1), new Point(1, 1), new Point(2, 1), new Point(2, 0) },
+				{ new Point(2, 0), new Point(0, 1), new Point(1, 1), new Point(2, 1) },    
 				{ new Point(1, 0), new Point(1, 1), new Point(1, 2), new Point(2, 2) },
 				{ new Point(0, 1), new Point(1, 1), new Point(2, 1), new Point(0, 2) },
 				{ new Point(1, 0), new Point(1, 1), new Point(1, 2), new Point(0, 0) }
@@ -137,6 +137,18 @@ public class TetrisBlock {
 	public Point[] getShape() {
 		
 		return Shapes[kind][rotation];
+		
+	}
+	
+	public Point[] getShapeWithRotation(int rotation) {
+		
+		return Shapes[kind][rotation];
+		
+	}
+	
+	public static Point[] getShape(int kind) {
+		
+		return Shapes[kind][0];
 		
 	}
 	
