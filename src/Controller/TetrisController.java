@@ -569,5 +569,89 @@ public class TetrisController extends KeyAdapter {
     	
     }
     
+    private void putPauseKeyBindings() {
+    	
+    	putKeyBindings(theView.getTetrisBoard(), KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), PAUSE_SELECT_UP, pauseSelectUp);
+    	putKeyBindings(theView.getTetrisBoard(), KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), PAUSE_SELECT_DOWN, pauseSelectDown);
+    	putKeyBindings(theView.getTetrisBoard(), KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), PAUSE_SELECT_ENTER, pauseSelectEnter);
+    	putKeyBindings(theView.getTetrisBoard(), KeyStroke.getKeyStroke(theModel.getKeyCode(5), 0), TETRIS_CONTINUE, tetrisContinue);
+    	
+    }
+    
+    private Action pauseSelectUp = new AbstractAction() {
+    	
+		private static final long serialVersionUID = 1L;
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			
+			theView.pauseSelectUp();
+			
+		}
+    	
+    };
+    
+    private Action pauseSelectDown = new AbstractAction() {
+    	
+		private static final long serialVersionUID = 1L;
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			
+			theView.pauseSelectDown();
+			
+		}
+    	
+    };
+    
+    private Action pauseSelectEnter = new AbstractAction() {
+    	
+		private static final long serialVersionUID = 1L;
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			
+			switch(theView.getPauseSelect()) {
+			case 0: 
+				tetrisContinue.actionPerformed(null);
+				break;
+			case 1:
+				theView.closeTetrisWindow();
+				theModel.quitGame();
+				levelSelect(theModel.getStartLevel());
+				break;
+			case 2:
+				theView.closeTetrisWindow();
+				theModel.quitGame();
+				menu();
+				break;
+			}
+			
+		}
+    	
+    };
+    
+    private Action tetrisContinue = new AbstractAction() {
+    	
+		private static final long serialVersionUID = 1L;
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			
+			theModel.setPause(false);
+			theView.setPause(false);
+			removePauseKeyBindings();
+			putTetrisKeyBindings();
+			
+		}
+    	
+    };
+    
+    private void removePauseKeyBindings() {
+    	
+    	removeKeyBindings(theView.getTetrisBoard(), KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), PAUSE_SELECT_UP);
+    	removeKeyBindings(theView.getTetrisBoard(), KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), PAUSE_SELECT_DOWN);
+    	removeKeyBindings(theView.getTetrisBoard(), KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), PAUSE_SELECT_ENTER);
+    	removeKeyBindings(theView.getTetrisBoard(), KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), TETRIS_CONTINUE);
+    	
+    }
+   
+    
 
 }
