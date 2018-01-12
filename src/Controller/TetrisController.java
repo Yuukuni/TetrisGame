@@ -1,7 +1,6 @@
 package Controller;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 import javax.swing.AbstractAction;
@@ -14,7 +13,7 @@ import Model.TetrisModel;
 import View.TetrisView;
 import View.TetrisWindow.TetrisViewSetting;
 
-public class TetrisController extends KeyAdapter {
+public class TetrisController {
 	
     private static final int IFW = JComponent.WHEN_IN_FOCUSED_WINDOW;
     
@@ -465,7 +464,7 @@ public class TetrisController extends KeyAdapter {
     	putKeyBindings(theView.getTetrisBoard(), KeyStroke.getKeyStroke(theModel.getKeyCode(1), 0), TETRIS_MOVE_LEFT, tetrisMoveLeft);
     	putKeyBindings(theView.getTetrisBoard(), KeyStroke.getKeyStroke(theModel.getKeyCode(2), 0), TETRIS_MOVE_RIGHT, tetrisMoveRight);
     	putKeyBindings(theView.getTetrisBoard(), KeyStroke.getKeyStroke(theModel.getKeyCode(3), 0), TETRIS_DROP, tetrisDrop);
-    	putKeyBindings(theView.getTetrisBoard(), KeyStroke.getKeyStroke(theModel.getKeyCode(4), 0), TETRIS_DROP_DOWN, tetrisDropdown);
+    	putKeyBindings(theView.getTetrisBoard(), KeyStroke.getKeyStroke(theModel.getKeyCode(4), 0), TETRIS_DROP_DOWN, tetrisDropDown);
     	putKeyBindings(theView.getTetrisBoard(), KeyStroke.getKeyStroke(theModel.getKeyCode(5), 0), TETRIS_PAUSE, tetrisPause);
    	 
     }
@@ -523,7 +522,7 @@ public class TetrisController extends KeyAdapter {
     	
     };
     
-    private Action tetrisDropdown = new AbstractAction() {
+    private Action tetrisDropDown = new AbstractAction() {
     	
     	private static final long serialVersionUID = 1L;
 		@Override

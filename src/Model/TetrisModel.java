@@ -1,62 +1,125 @@
 package Model;
 
-import java.awt.Point;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 public class TetrisModel {
 	
 	private TetrisGame game;
 	
-	public void GameStart() {
+	private boolean quit;
+	private boolean pause;
+	
+	private int[] keyCode;
+	
+	public TetrisModel() {
 		
-		game = new TetrisGame();
+		keyCode = new int[] {
+			KeyEvent.VK_UP, 
+			KeyEvent.VK_LEFT, 
+			KeyEvent.VK_RIGHT, 
+			KeyEvent.VK_DOWN, 
+			KeyEvent.VK_SPACE, 
+			KeyEvent.VK_ESCAPE
+		};
+		
+	}
+	
+	public void gameStart(int startLevel) {
+
+		quit = false;
+		pause = false;
+		game = new TetrisGame(startLevel);
 	
 	}
 	
-	public long getScore() {
+	public boolean quit() {
 		
-		return game.score();
+		return quit;
 		
 	}
 	
-	public int[][] getBoard() {
+	public void quitGame() {
 		
-		return game.intBoard();
+		quit = true;
+		
+	}
+
+	public boolean pause() {
+		
+		return pause;
+		
+	}
+	
+	public void setPause(boolean b) {
+		
+		pause = b;
+		
+	}
+	
+	public boolean gameover() {
+		
+		return game.gameover();
+		
+	}
+	
+	public int getLevel() {
+		
+		return game.getLevel();
+		
+	}
+	
+	public void setLevel(int level) {
+		
+		game.setLevel(level);
+		
+	}
+	
+	public int getScore() {
+		
+		return game.getScore();
+		
+	}
+	
+	public void addScore(int i) {
+		
+		game.addScore(i);
+		
+	}
+	
+	public int getLine() {
+		
+		return game.getLine();
+		
+	}
+	
+	public int getStartLevel() {
+		
+		return game.getStartLevel();
+		
+	}
+
+	public TetrisBlock getCurrentBlock() {
+		
+		return game.getCurrentBlock();
 		
 	}
 	
 	public ArrayList<Integer> getCurrentBlocks() {
 		
-		return game.currentBlocks();
+		return game.getCurrentBlocks();
 		
 	}
 	
 	public ArrayList<Integer> getNextBlocks() {
 		
-		return game.nextBlocks();
+		return game.getNextBlocks();
 		
 	}
 	
-	public Point getCurrentBlockPosition() {
+	public int[][] getBoard() {
 		
-		return game.currentBlockPosition();
-		
-	}
-	
-	public int getCurrentBlockKind() {
-		
-		return game.currentBlockKind();
-	}
-	
-	public int getCurrentBlockRotation() {
-		
-		return game.currentBlockRotation();
-		
-	}
-	
-	public Point[][][] getTetrisBlocks() {
-		
-		return game.TetrisBlocks();
+		return game.getBoard();
 		
 	}
 	
@@ -75,6 +138,36 @@ public class TetrisModel {
 	public void drop() {
 		
 		game.drop();
+		
+	}
+	
+	public void dropDown() {
+		
+		game.dropDown();
+		
+	}
+	
+	public int[] getKeyCode() {
+		
+		return keyCode;
+		
+	}
+	
+	public int getKeyCode(int i) {
+		
+		return keyCode[i];
+		
+	}
+	
+	public void setKeyCode(int[] keyCode) {
+		
+		this.keyCode = keyCode;
+		
+	}
+	
+	public void setKeyCode(int i, int keyCode) {
+		
+		this.keyCode[i] = keyCode;
 		
 	}
 	

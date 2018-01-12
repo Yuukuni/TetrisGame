@@ -6,106 +6,179 @@ import java.util.Collections;
 
 public class TetrisGame {
 	
-	private long score;
+	public static final int WIDTH_BLOCKS = 12;
+	public static final int HEIGHT_BLOCKS = 23;
+	
+	public static final int LEVEL_TOP = 15;
+	
+	private boolean gameover;
+	
+	private int level;
+	private int score;
+	private int line;
+	private int startLevel;
+	
+	private TetrisBlock currentBlock;
+	private ArrayList<Integer> currentBlocks;
+	private ArrayList<Integer> nextBlocks;
 	
 	public enum Blocks { Blue, Cyan, Green, Orange, Purple, Red, Yellow, Wall, None };
 	private Blocks[][] board;
 	
-	private ArrayList<Integer> currentBlocks = new ArrayList<Integer>();
-	private ArrayList<Integer> nextBlocks = new ArrayList<Integer>();
-	
-	private Point currentBlockPosition;
-	private int currentBlockKind;
-	private int currentBlockRotation;
-	
-	public static final int WIDTH_BLOCKS = 12;
-	public static final int HEIGHT_BLOCKS = 21;
-	
-	private static final Point START_POSITION = new Point(4, 0);
-	private static final int START_ROTATION = 0;
-	
-	private static final Point[][][] TetrisBlocks = {
-			// I-Piece
-			{
-				{ new Point(0, 1), new Point(1, 1), new Point(2, 1), new Point(3, 1) },
-				{ new Point(1, 0), new Point(1, 1), new Point(1, 2), new Point(1, 3) },
-				{ new Point(0, 1), new Point(1, 1), new Point(2, 1), new Point(3, 1) },
-				{ new Point(1, 0), new Point(1, 1), new Point(1, 2), new Point(1, 3) }
-			},
-			
-			// J-Piece
-			{
-				{ new Point(0, 1), new Point(1, 1), new Point(2, 1), new Point(2, 0) },
-				{ new Point(1, 0), new Point(1, 1), new Point(1, 2), new Point(2, 2) },
-				{ new Point(0, 1), new Point(1, 1), new Point(2, 1), new Point(0, 2) },
-				{ new Point(1, 0), new Point(1, 1), new Point(1, 2), new Point(0, 0) }
-			},
-			
-			// L-Piece
-			{
-				{ new Point(0, 1), new Point(1, 1), new Point(2, 1), new Point(2, 2) },
-				{ new Point(1, 0), new Point(1, 1), new Point(1, 2), new Point(0, 2) },
-				{ new Point(0, 1), new Point(1, 1), new Point(2, 1), new Point(0, 0) },
-				{ new Point(1, 0), new Point(1, 1), new Point(1, 2), new Point(2, 0) }
-			},
-			
-			// O-Piece
-			{
-				{ new Point(0, 0), new Point(0, 1), new Point(1, 0), new Point(1, 1) },
-				{ new Point(0, 0), new Point(0, 1), new Point(1, 0), new Point(1, 1) },
-				{ new Point(0, 0), new Point(0, 1), new Point(1, 0), new Point(1, 1) },
-				{ new Point(0, 0), new Point(0, 1), new Point(1, 0), new Point(1, 1) }
-			},
-			
-			// S-Piece
-			{
-				{ new Point(1, 0), new Point(2, 0), new Point(0, 1), new Point(1, 1) },
-				{ new Point(0, 0), new Point(0, 1), new Point(1, 1), new Point(1, 2) },
-				{ new Point(1, 0), new Point(2, 0), new Point(0, 1), new Point(1, 1) },
-				{ new Point(0, 0), new Point(0, 1), new Point(1, 1), new Point(1, 2) }
-			},
-			
-			// T-Piece
-			{
-				{ new Point(1, 0), new Point(0, 1), new Point(1, 1), new Point(2, 1) },
-				{ new Point(1, 0), new Point(0, 1), new Point(1, 1), new Point(1, 2) },
-				{ new Point(0, 1), new Point(1, 1), new Point(2, 1), new Point(1, 2) },
-				{ new Point(1, 0), new Point(1, 1), new Point(2, 1), new Point(1, 2) }
-			},
-			
-			// Z-Piece
-			{
-				{ new Point(0, 0), new Point(1, 0), new Point(1, 1), new Point(2, 1) },
-				{ new Point(1, 0), new Point(0, 1), new Point(1, 1), new Point(0, 2) },
-				{ new Point(0, 0), new Point(1, 0), new Point(1, 1), new Point(2, 1) },
-				{ new Point(1, 0), new Point(0, 1), new Point(1, 1), new Point(0, 2) }
-			}
-	};
-	
-	private static Blocks Blocks(int kind) {
+	public TetrisGame(int startLevel) {
 		
-		switch(kind) {
-			case 0: return Blocks.Blue;
-			case 1: return Blocks.Cyan;
-			case 2: return Blocks.Green;
-			case 3: return Blocks.Orange;
-			case 4: return Blocks.Purple;
-			case 5: return Blocks.Red;
-			case 6: return Blocks.Yellow;
-			case 7: return Blocks.Wall;
-			case 8: return Blocks.None;
-			default: return null;
-		}
+		initGame(startLevel);
 		
 	}
 	
-	public long score() { 
+	private void initGame(int startLevel) {
+		
+		gameover = false;
+		
+		level = startLevel;
+		score = 0;
+		line = 0;
+		this.startLevel = startLevel;
+		
+		board = new Blocks[WIDTH_BLOCKS][HEIGHT_BLOCKS];
+		
+		for (int i = 0; i < WIDTH_BLOCKS; ++i) {
+			for (int j = 0; j < HEIGHT_BLOCKS; ++j) {
+				if (i == 0 || i == (WIDTH_BLOCKS - 1) || j == (HEIGHT_BLOCKS - 1)) {
+					board[i][j] = Blocks.Wall;
+				} else {
+					board[i][j] = Blocks.None;
+				}
+			}
+		}
+		
+		currentBlocks = blocksRandomlyGenerated();
+		nextBlocks = blocksRandomlyGenerated();
+		
+		newCurrentBlock();
+	
+	}
+	
+	private ArrayList<Integer> blocksRandomlyGenerated() {
+		
+		ArrayList<Integer> blocks = new ArrayList<Integer>();
+		Collections.addAll(blocks, 0, 1, 2, 3, 4, 5, 6);
+		Collections.shuffle(blocks);
+		return blocks;
+		
+	}
+	
+	private void newCurrentBlock() {
+		
+		if(!canNewCurrentBlock()) {
+			gameover = true;
+		}
+		else {
+			currentBlock = new TetrisBlock(currentBlocks.get(0));
+			
+			if (nextBlocks.isEmpty()) {
+				nextBlocks = blocksRandomlyGenerated();
+			}
+			
+			for(int i = 0; i < 6; ++i) {
+				currentBlocks.set(i, currentBlocks.get(i + 1));
+			}
+			currentBlocks.set(6, nextBlocks.get(0));
+			
+			for(int i = 0; i < (nextBlocks.size() - 1); ++i) {
+				nextBlocks.set(i, nextBlocks.get(i + 1));
+			}
+			nextBlocks.remove(nextBlocks.size() - 1);
+		}
+	
+	}
+	
+	private boolean canNewCurrentBlock() {
+		
+		for (Point p : TetrisBlock.getShape(currentBlocks.get(0))) {
+			if (board[p.x + TetrisBlock.START_POSITION_X][p.y + TetrisBlock.START_POSITION_Y] != Blocks.None) {
+				return false;
+			}
+		}
+		return true;
+		
+	}
+	
+	private boolean collidesAt(int x, int y, int rotation) {
+		
+		for (Point p : currentBlock.getShapeWithRotation(rotation)) {
+			if(p.x + x < 0) {
+				return true;
+			}
+			if (board[p.x + x][p.y + y] != Blocks.None) {
+				return true;
+			}
+		}
+		return false;
+		
+	}
+	
+	public boolean gameover() {
+		
+		return gameover;
+		
+	}
+	
+	public int getLevel() {
+		
+		return level;
+		
+	}
+	
+	public void setLevel(int level) {
+		
+		this.level = level;
+		
+	}
+	
+	public int getScore() { 
 		
 		return score;
 		
 	}
 	
-	public int[][] intBoard() {
+	public void addScore(int i) {
+		
+		score += i;
+		
+	}
+	
+	public int getLine() {
+		
+		return line;
+		
+	}
+	
+	public int getStartLevel() {
+		
+		return startLevel;
+		
+	}
+	
+	public TetrisBlock getCurrentBlock() {
+		
+		return currentBlock;
+		
+	}
+	
+	public ArrayList<Integer> getCurrentBlocks() {
+		
+		return currentBlocks;
+	
+	}
+	
+	public ArrayList<Integer> getNextBlocks() {
+		
+		return nextBlocks;
+		
+	}
+	
+	public int[][] getBoard() {
 		
 		int[][] intBoard = new int[WIDTH_BLOCKS][HEIGHT_BLOCKS];
 		for(int i = 0; i < WIDTH_BLOCKS; ++i) {
@@ -117,147 +190,53 @@ public class TetrisGame {
 		
 	}
 	
-	public ArrayList<Integer> currentBlocks() {
-		
-		return currentBlocks;
-	
-	}
-	
-	public ArrayList<Integer> nextBlocks() {
-		
-		return nextBlocks;
-		
-	}
-	
-	public Point currentBlockPosition() {
-		
-		return currentBlockPosition;
-		
-	}
-	
-	public int currentBlockKind() {
-		
-		return currentBlockKind;
-		
-	}
-	
-	public int currentBlockRotation() {
-		
-		return currentBlockRotation;
-		
-	}
-	
-	public Point[][][] TetrisBlocks() {
-		
-		return TetrisBlocks;
-		
-	}
-	
-	public TetrisGame() {
-		
-		initGame();
-		new Thread() {
-			@Override 
-			public void run() {
-				while (true) {
-					try {
-						Thread.sleep(1000);
-						drop();
-					} catch ( InterruptedException e ) {}
-				}
-			}
-		}.start();
-		
-	}
-	
-	private void initGame() {
-	
-		score = 0;
-		board = new Blocks[WIDTH_BLOCKS][HEIGHT_BLOCKS];
-		for (int i = 0; i < WIDTH_BLOCKS; ++i) {
-			for (int j = 0; j < HEIGHT_BLOCKS; ++j) {
-				if (i == 0 || i == (WIDTH_BLOCKS - 1) || j == (HEIGHT_BLOCKS - 1)) {
-					board[i][j] = Blocks.Wall;
-				} else {
-					board[i][j] = Blocks.None;
-				}
-			}
-		}
-		Collections.addAll(currentBlocks, 0, 1, 2, 3, 4, 5, 6);
-		Collections.shuffle(currentBlocks);
-		Collections.addAll(nextBlocks, 0, 1, 2, 3, 4, 5, 6);
-		Collections.shuffle(nextBlocks);
-		newBlock();
-	
-	}
-	
-	private void newBlock() {
-		
-		currentBlockPosition = START_POSITION;
-		currentBlockKind = currentBlocks.get(0);
-		currentBlockRotation = START_ROTATION;
-		
-		if (nextBlocks.isEmpty()) {
-			Collections.addAll(nextBlocks, 0, 1, 2, 3, 4, 5, 6);
-			Collections.shuffle(nextBlocks);
-		}
-		
-		int nextFirstBlock = nextBlocks.get(0);
-		
-		for(int i = 0; i < 6; ++i) {
-			currentBlocks.set(i, currentBlocks.get(i+1));
-			nextBlocks.set(i, nextBlocks.get(i+1));
-		}
-		currentBlocks.set(6, nextFirstBlock);
-		nextBlocks.remove(nextBlocks.size() - 1);
-		
-	}
-	
-	private boolean collidesAt(int x, int y, int rotation) {
-		
-		for (Point p : TetrisBlocks[currentBlockKind][rotation]) {
-			if (board[p.x + x][p.y + y] != Blocks.None) {
-				return true;
-			}
-		}
-		return false;
-		
-	}
-	
 	public void rotate() {
 		
-		int newRotation = (currentBlockRotation + 1) % 4;
-		if (!collidesAt(currentBlockPosition.x, currentBlockPosition.y, newRotation)) {
-			currentBlockRotation = newRotation;
+		int currentRotation = currentBlock.getRotation();
+		int newRotation = (currentRotation + 1) % 4;
+		
+		if (!collidesAt(currentBlock.getPosition().x, currentBlock.getPosition().y, newRotation)) {
+			currentBlock.setRotation(newRotation);
 		}
 
 	}
 	
 	public void move(int i) {
 		
-		if (!collidesAt(currentBlockPosition.x + i, currentBlockPosition.y, currentBlockRotation)) {
-			currentBlockPosition.x += i;	
+		if (!collidesAt(currentBlock.getPosition().x + i, currentBlock.getPosition().y, currentBlock.getRotation())) {
+			currentBlock.move(i);	
 		}
 		
 	}
 	
 	public void drop() {
 		
-		if (!collidesAt(currentBlockPosition.x, currentBlockPosition.y + 1, currentBlockRotation)) {
-			currentBlockPosition.y++;
+		if (!collidesAt(currentBlock.getPosition().x, currentBlock.getPosition().y + 1, currentBlock.getRotation())) {
+			currentBlock.drop();
 		} else {
 			updateBoard();
 		}	
 
 	}
 	
+	public void dropDown() {
+		
+		while (!collidesAt(currentBlock.getPosition().x, currentBlock.getPosition().y + 1, currentBlock.getRotation())) {
+			currentBlock.drop();
+			score += 2;
+		}
+		updateBoard();
+	}
+	
 	private void updateBoard() {
 		
-		for (Point p : TetrisBlocks[currentBlockKind][currentBlockRotation]) {
-			board[currentBlockPosition.x + p.x][currentBlockPosition.y + p.y] = Blocks(currentBlockKind);
+		int x = currentBlock.getPosition().x;
+		int y = currentBlock.getPosition().y;
+		for (Point p : currentBlock.getShape()) {
+			board[x + p.x][y + p.y] = Blocks.values()[currentBlock.getKind()];
 		}
 		clearLines();
-		newBlock();
+		newCurrentBlock();
 		
 	}
 	
@@ -265,9 +244,9 @@ public class TetrisGame {
 		
 		boolean needClear;
 		int clearLines = 0;
-		for (int j = HEIGHT_BLOCKS; j > 0; --j) {
+		for (int j = (HEIGHT_BLOCKS - 2); j > 0; --j) {
 			needClear = true;
-			for (int i = 1; i < (WIDTH_BLOCKS - 1); i++) {
+			for (int i = 1; i < (WIDTH_BLOCKS - 1); ++i) {
 				if (board[i][j] == Blocks.None) {
 					needClear = false;
 					break;
@@ -277,6 +256,11 @@ public class TetrisGame {
 				deleteRow(j++);
 				clearLines++;
 			}
+		}
+		
+		line += clearLines;
+		if(line + (startLevel - 1) * 10 >= level * 10 && level < LEVEL_TOP) {
+			level++;
 		}
 		
 		switch (clearLines) {
@@ -298,13 +282,13 @@ public class TetrisGame {
 		
 	private void deleteRow(int row) {
 	
-		for(int i = 1; i < (WIDTH_BLOCKS - 1); ++i)
-			board[1][i] = Blocks.None;
-		for (int j = row; j > 1; j--) {
+		for (int j = row; j > 0; j--) {
 			for (int i = 1; i < (WIDTH_BLOCKS - 1); ++i) {
 				board[i][j] = board[i][j - 1];
 			}
 		}
+		for(int i = 1; i < (WIDTH_BLOCKS - 1); ++i)
+			board[i][0] = Blocks.None;
 		
 	}
 	
