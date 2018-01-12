@@ -652,6 +652,237 @@ public class TetrisController extends KeyAdapter {
     	
     }
    
+    private void dropRepaint() {
+    	
+		if(theModel.getLevel() != theView.getLevel()) {
+			theView.setLevel(theModel.getLevel());
+		}
+		if(theModel.getCurrentBlock().getPosition().y == 0) {
+			theView.repaintPreviewBoard(theModel.getCurrentBlocks());
+		}
+		theView.repaintTetrisBoard(theModel.getCurrentBlock(), theModel.getBoard());
+		theView.repaintScoreBoard(theModel.getScore(), theModel.getLine());
+    	
+    }
+	
+    private void blockDroping() {
     
+		new Thread() {
+			@Override 
+			public void run() {
+				while (!theModel.quit() && !theModel.gameover()) {
+					try {
+						Thread.sleep(SPEED_LEVEL[theModel.getLevel() - 1]);
+						if(!theModel.pause()) {
+							theModel.drop();
+							dropRepaint();
+						}
+					} catch ( InterruptedException e ) {}
+				}
+				if(theModel.gameover()) {
+					theView.gameover();
+					removeTetrisKeyBindings();
+					putGameoverKeyBindings();
+				}
+			}
+		}.start();
+    
+    }
+    
+    private void putGameoverKeyBindings() {
+    	
+    	putKeyBindings(theView.getTetrisBoard(), KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), GAMEOVER_ENTER, gameoverEnter);
+    	
+    }
+    
+    private Action gameoverEnter = new AbstractAction() {
+
+		private static final long serialVersionUID = 1L;
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			
+			theView.gameoverEntered();
+			removeGameoverKeyBindings();
+			putGameoverSelectKeyBindings();
+			
+		}
+
+    };
+    
+    private void removeGameoverKeyBindings() {
+    	
+    	removeKeyBindings(theView.getTetrisBoard(), KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), GAMEOVER_ENTER);
+    	
+    }
+    
+    private void putGameoverSelectKeyBindings() {
+    	
+    	putKeyBindings(theView.getTetrisBoard(), KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), GAMEOVER_SELECT_CHANGE, gameoverSelectChange);
+    	putKeyBindingsOfInputMap(theView.getTetrisBoard(), KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), GAMEOVER_SELECT_CHANGE);
+    	putKeyBindings(theView.getTetrisBoard(), KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), GAMEOVER_SELECT_ENTER, gameoverSelectEnter);
+    	
+    }
+    
+    private Action gameoverSelectChange = new AbstractAction() {
+
+ 		private static final long serialVersionUID = 1L;
+ 		@Override
+ 		public void actionPerformed(ActionEvent arg0) {
+ 			
+ 			theView.gameoverSelectChange();
+ 			
+ 		}
+     	
+     };
+     
+     private Action gameoverSelectEnter = new AbstractAction() {
+
+ 		private static final long serialVersionUID = 1L;
+ 		@Override
+ 		public void actionPerformed(ActionEvent e) {
+ 			
+ 			theView.closeTetrisWindow();
+ 			theModel.quitGame();
+ 			
+ 			switch(theView.getGameoverSelect()) {
+			case 0:
+				levelSelect(theModel.getStartLevel());
+				break;
+			case 1:
+				menu();
+				break;
+ 			}
+ 			
+ 		}
+     	
+     };
+     
+     private void setting() {
+    	 
+    	 int[] keyCode = new int[SETTING_AMOUNT];
+    	 
+    	 for(int i = 0; i < SETTING_AMOUNT; i++) {
+    		 keyCode[i] = theModel.getKeyCode(i);
+    	 }
+    	 
+    	 theView.openSettingWindow(keyCode);
+         putSettingKeyBindings();
+    	 
+     }
+     
+     private void putSettingKeyBindings() {
+
+    	 putKeyBindings(theView.getSettingBoard(), KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), SETTING_SELECT_UP, settingSelectUp);
+    	 putKeyBindings(theView.getSettingBoard(), KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), SETTING_SELECT_DOWN, settingSelectDown);
+    	 putKeyBindings(theView.getSettingBoard(), KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), SETTING_SELECT_ENTER, settingSelectEnter);
+    	 putKeyBindings(theView.getSettingBoard(), KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), SETTING_EXIT, settingExit);
+    	 
+     }
+     
+     private Action settingSelectUp = new AbstractAction() {
+
+		private static final long serialVersionUID = 1L;
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			
+			theView.settingSelectUp();
+			
+		}
+    	 
+     };
+ 
+     private Action settingSelectDown = new AbstractAction() {
+
+		private static final long serialVersionUID = 1L;
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			
+			theView.settingSelectDown();
+			
+		}
+    	 
+     };
+     
+     private Action settingSelectEnter = new AbstractAction() {
+    	 
+    	private static final long serialVersionUID = 1L;
+    	
+ 		@Override
+ 		public void actionPerformed(ActionEvent arg0) {
+ 		
+ 			switch(theView.getSettingSelect()) {
+ 			case 0: case 1: case 2: case 3: case 4: case 5:
+ 				theView.settingSelectEntered();
+ 				removeSettingKeyBindings();
+ 				putSettingKeyKeyBindings();
+ 				break;
+ 				
+ 			case 6:
+ 				theModel.setKeyCode(theView.getkeyCode());
+ 				settingExit.actionPerformed(null);
+ 				break;
+ 				
+ 			case 7:
+ 				theView.setKey(theModel.getKeyCode());
+ 				settingExit.actionPerformed(null);
+ 				break;
+ 			}
+ 			
+ 		}
+    	 
+     };
+ 
+     private Action settingExit = new AbstractAction() {
+
+		private static final long serialVersionUID = 1L;
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			
+			theView.closeSettingWindow();
+			menu();
+			
+		}
+    	 
+     };
+     
+     private void removeSettingKeyBindings() {
+
+    	 removeKeyBindings(theView.getSettingBoard(), KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), SETTING_SELECT_UP);
+    	 removeKeyBindings(theView.getSettingBoard(), KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), SETTING_SELECT_DOWN);
+    	 removeKeyBindings(theView.getSettingBoard(), KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), SETTING_SELECT_ENTER);
+    	 removeKeyBindings(theView.getSettingBoard(), KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), SETTING_EXIT);
+    	 
+     }
+     
+     private Action[] settingKeys = new AbstractAction[SETTING_KEY_AMOUNT];
+     
+     private void putSettingKeyKeyBindings() {
+    	 
+    	 for(int i = 0; i < SETTING_KEY_AMOUNT; i++) {
+    		 final int idx = i;
+    		 settingKeys[idx] = new AbstractAction() {
+				private static final long serialVersionUID = 1L;
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					
+					theView.setKey(theView.getSettingSelect(), SETTING_KEYCODES[idx]);
+					theView.settingKeyEntered();
+					removeSettingKeyKeyBindings();
+					putSettingKeyBindings();
+					
+				}
+    		 };
+    		 putKeyBindings(theView.getSettingBoard(), KeyStroke.getKeyStroke(SETTING_KEYCODES[i], 0), SETTING_KEYS[i], settingKeys[i]);
+    	 }
+    	 
+     }
+     
+     private void removeSettingKeyKeyBindings() {
+    	 
+    	 for(int i = 0; i < SETTING_KEY_AMOUNT; i++) {
+    		 removeKeyBindings(theView.getSettingBoard(), KeyStroke.getKeyStroke(SETTING_KEYCODES[i], 0), SETTING_KEYS[i]);
+    	 }
+    	 
+     }
 
 }
