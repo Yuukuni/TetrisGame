@@ -1,3 +1,8 @@
 *.class
+<<<<<<< HEAD
 *.mdj
 bin/README.md
+=======
+bin/README.md
+*.mdj
+>>>>>>> feature/View
